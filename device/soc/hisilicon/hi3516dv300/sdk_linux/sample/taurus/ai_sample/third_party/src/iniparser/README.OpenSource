@@ -1,0 +1,11 @@
+[
+    {
+    "Name": "iniparser",
+    "License": "MIT License",
+    "License File": "LICENSE",
+    "Version Number": "4.1",
+    "Owner": "yinzhongyi@huawei.com",
+    "Upstream URL": "https://github.com/ndevilla/iniparser/@http://ndevilla.free.fr/iniparser",
+    "Description": "This modules offers parsing of ini files from the C level. See a complete documentation in HTML format, from this directory open the file html/index.html with any HTML-capable browser."
+    }
+]

@@ -1,0 +1,90 @@
+[
+    {
+		"return-x-y":[199, 1262],
+		"recent-x-y":[500, 1262],
+		"home-x-y":[350, 1262],
+		"recent_del-x-y":[350, 1140],
+		"permisson_ok-x-y":[495, 690],
+		"permisson_no-x-y":[241, 690],
+		"shot_cmd":[""],
+		"cmp_cmd-level":["", 443200]
+	},
+    {
+        "app_name": "launcher",
+        "entry": "",
+        "all_actions": [[2, "shot_cmd"], [2, "cmp_cmd-level"]]
+    },
+    {
+        "app_name": "settings",
+        "entry": "aa start -a com.ohos.settings.MainAbility -b com.ohos.settings",
+        "all_actions": [
+		    [3, "shot_cmd", "settings"], [3, "cmp_cmd-level"], [3, 400, 120], [3, 400, 120], [20, 400, 80], [3, 400, 80],
+			[3, "shot_cmd", "keyboard"], [3, "recent-x-y"], [3, "recent_del-x-y"], [3, "recent-x-y"], [3, "recent_del-x-y"], [3, "cmp_cmd-level", 200000]
+		]
+    },
+    {
+        "app_name": "photos",
+        "entry": "aa start -a com.ohos.photos.MainAbility -b com.ohos.photos",
+        "all_actions": [[2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"]]
+    },
+    {
+        "app_name": "photos",
+        "entry": "aa start -a com.ohos.photos.MainAbility -b com.ohos.photos",
+        "all_actions": [[2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level"], [2, "recent-x-y"], [2, "recent_del-x-y"]]
+    },
+    {
+        "app_name": "distributedcalc",
+        "entry": "aa start -a com.example.distributedcalc.default -b com.example.distributedcalc",
+        "all_actions": [[2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400], [2, "recent-x-y"], [2, "recent_del-x-y"]]
+    },
+    {
+        "app_name": "camera",
+        "entry": "aa start -a com.ohos.camera.MainAbility -b com.ohos.camera",
+        "all_actions": [
+		    [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"],
+		    [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"]
+		]
+    },
+    {
+        "app_name": "camera",
+        "entry": "aa start -a com.ohos.camera.MainAbility -b com.ohos.camera",
+        "all_actions": [[2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400]]
+    },
+	{
+        "app_name": "contacts",
+        "entry": "aa start -a com.ohos.contacts.MainAbility -b com.ohos.contacts",
+        "all_actions": [
+		    [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"],
+		    [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"]
+		]
+    },
+	{
+        "app_name": "contacts",
+        "entry": "aa start -a com.ohos.contacts.MainAbility -b com.ohos.contacts",
+        "all_actions": [[2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400], [2, "recent-x-y"], [2, "recent_del-x-y"]]
+    },
+    {
+        "app_name": "music",
+        "entry": "aa start -a com.ohos.distributedmusicplayer.MainAbility -b com.ohos.distributedmusicplayer",
+        "all_actions": [[2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"]]
+    },
+	{
+        "app_name": "music",
+        "entry": "aa start -a com.ohos.distributedmusicplayer.MainAbility -b com.ohos.distributedmusicplayer",
+        "all_actions": [[2, "permisson_ok-x-y"], [2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400]]
+    },
+    {
+        "app_name": "mms",
+        "entry": "aa start -a com.ohos.mms.MainAbility -b com.ohos.mms",
+        "all_actions": [
+		    [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"], [2, "permisson_ok-x-y"],
+		    [2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400]
+		]
+    },
+    {
+        "app_name": "note",
+        "entry": "aa start -a com.ohos.note.MainAbility -b com.ohos.note",
+        "all_actions": [[2, "shot_cmd"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "recent-x-y"], [2, "recent_del-x-y"], [2, "cmp_cmd-level", 3686400]]
+    }
+	
+]
