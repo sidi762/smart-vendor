@@ -1613,7 +1613,7 @@ static HI_VOID HandClassifyAiProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, V
 
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug.model, &resizeFrm, &frm);
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug.model, &resizeFrm, &frm); //Get result from model, returns the return value of CnnCalU8c1Img()
         SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
             "hand classify plug cal FAIL, ret=%#x\n", ret);
 
