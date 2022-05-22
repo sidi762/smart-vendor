@@ -13,7 +13,7 @@
 
 import("//build/lite/config/component/lite_component.gni")
 lite_component("smart_vendor_ai") {
-  features = [ ":ohos_camera_ai_demo" ]
+  features = [ ":smart_vendor_main" ]
 }
 
 need_link_mpp_lib = true
@@ -26,8 +26,8 @@ if (need_link_opencv_lib) {
   opencv_lib_path = "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/taurus/ai_sample/third_party"
 }
 
-executable("smart_vendor_ai") {
-  output_name = "smart_vendor_ai"
+executable("smart_vendor_main") {
+  output_name = "smart_vendor_main"
   sources = [
     "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/platform/audio/adp/audio_aac_adp.c",
     "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/platform/audio/adp/audio_dl_adp.c",

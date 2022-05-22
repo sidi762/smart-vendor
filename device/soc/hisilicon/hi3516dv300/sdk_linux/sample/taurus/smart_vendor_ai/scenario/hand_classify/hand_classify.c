@@ -65,7 +65,7 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
     ret = CnnCreate(&self, MODEL_FILE_GESTURE);
     *model = ret < 0 ? 0 : (uintptr_t)self;
     HandDetectInit(); // Initialize the hand detection model
-    //SAMPLE_PRT("Load hand detect claasify model success\n");
+    SAMPLE_PRT("Hand gesture classification model loaded\n");
     /* uart open init */
     uartFd = UartOpenInit();
     if (uartFd < 0) {
@@ -242,7 +242,7 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
         // Crop the image to classification network
         RectBox targetBox = cnnBoxs[biggestBoxIndex];
         ret = ImgYuvCrop(&img, &imgIn, &targetBox);
-        SAMPLE_PRT("xmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped 
+        SAMPLE_PRT("xmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped
         SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
         //Try if we don't crop gives better result: Doesn't seems to work
