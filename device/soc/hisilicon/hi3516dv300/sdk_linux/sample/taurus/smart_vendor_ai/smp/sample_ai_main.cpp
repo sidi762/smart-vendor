@@ -22,7 +22,7 @@
 using namespace std;
 
 /* function : show usage */
-static void SAMPLE_AI_Usage(char* pchPrgName)
+static void SmartVendorUsage(char* pchPrgName)
 {
     printf("Usage : %s <index> \n", pchPrgName);
     printf("index:\n");
@@ -38,16 +38,6 @@ static void SAMPLE_AI_Usage(char* pchPrgName)
 int main(int argc, char *argv[])
 {
     HI_S32 s32Ret = HI_FAILURE;
-    //sample_media_opencv mediaOpencv;
-    // if (argc < 2 || argc > 2) { // 2: argc indicates the number of parameters
-    //     SAMPLE_AI_Usage(argv[0]);
-    //     return HI_FAILURE;
-    // }
-
-    // if (!strncmp(argv[1], "-h", 2)) { // 2: used to compare the first 2 characters
-    //     SAMPLE_AI_Usage(argv[0]);
-    //     return HI_SUCCESS;
-    // }
     sdk_init();
     /* MIPI is GPIO55, Turn on the backlight of the LCD screen */
     system("cd /sys/class/gpio/;echo 55 > export;echo out > gpio55/direction;echo 1 > gpio55/value");
@@ -63,7 +53,7 @@ int main(int argc, char *argv[])
     //         mediaOpencv.SAMPLE_MEDIA_TENNIS_DETECT();
     //         break;
     //     default:
-    //         SAMPLE_AI_Usage(argv[0]);
+    //         SmartVendorUsage(argv[0]);
     //         break;
     // }
 

@@ -33,7 +33,7 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model);
 HI_S32 Yolo2HandDetectResnetClassifyUnload(uintptr_t model);
 
 /* hand detect and classify calculation */
-HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm);
+HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfo[]);
 
 #ifdef __cplusplus
 }

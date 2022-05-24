@@ -51,7 +51,7 @@ static RectBox boxs[DETECT_OBJ_MAX] = {0};
 static RectBox objBoxs[DETECT_OBJ_MAX] = {0};
 static RectBox remainingBoxs[DETECT_OBJ_MAX] = {0};
 static RectBox cnnBoxs[DETECT_OBJ_MAX] = {0}; // Store the results of the classification network
-static RecogNumInfo numInfo[RET_NUM_MAX] = {0};
+//static RecogNumInfo numInfo[RET_NUM_MAX] = {0};
 static IVE_IMAGE_S imgIn;
 static IVE_IMAGE_S imgDst;
 static VIDEO_FRAME_INFO_S frmIn;
@@ -203,7 +203,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     //SAMPLE_PRT("hand gesture success\n");
 }
 
-HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm)
+HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfo[])
 {
     SAMPLE_SVP_NNIE_CFG_S *self = (SAMPLE_SVP_NNIE_CFG_S*)model;
     HI_S32 resLen = 0;
@@ -241,8 +241,11 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
 
         // Crop the image to classification network
         RectBox targetBox = cnnBoxs[biggestBoxIndex];
+        targetBox.ymax += 50;
+        targetBox.ymin -= 50;
+        //MppFrmDrawRects(dstFrm, targetBox, 1, RGB888_GREEN, DRAW_RETC_THICK); //
         ret = ImgYuvCrop(&img, &imgIn, &targetBox);
-        SAMPLE_PRT("xmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped
+        SAMPLE_PRT("\nxmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped
         SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
         //Try if we don't crop gives better result: Doesn't seems to work
@@ -265,7 +268,7 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
             SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "CnnCalU8c1Img FAIL, ret=%#x\n", ret);
             HI_ASSERT(resLen <= sizeof(numInfo) / sizeof(numInfo[0]));
-            HandDetectFlag(numInfo[0]);
+            //HandDetectFlag(numInfo[0]);
             MppFrmDestroy(&frmDst);
         }
         IveImgDestroy(&imgIn);

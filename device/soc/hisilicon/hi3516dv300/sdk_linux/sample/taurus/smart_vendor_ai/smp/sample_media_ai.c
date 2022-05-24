@@ -1598,6 +1598,99 @@ int ViVpssCreate(MppSess** sess, const ViCfg* viCfg, const VpssCfg* vpssCfg)
         return ret;
 }
 
+/* hand gesture recognition info */
+static void HandDetectFlag(const RecogNumInfo resBuf)
+{
+    HI_CHAR *gestureName = NULL;
+    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    switch (resBuf.num) {
+        case 0u:
+            gestureName = "gesture eight";
+            //UartSendRead(uartFd, FistGesture); // 拳头手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 1u:
+            gestureName = "gesture empty";
+            //UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 2u:
+            gestureName = "gesture fist";
+            //UartSendRead(uartFd, OkGesture); // OK手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 3u:
+            gestureName = "gesture five";
+            //UartSendRead(uartFd, PalmGesture); // 手掌手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 4u:
+            gestureName = "gesture four";
+            //UartSendRead(uartFd, YesGesture); // yes手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 5u:
+            gestureName = "gesture lh_left";
+            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 6u:
+            gestureName = "gesture lh_right";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 7u:
+            gestureName = "gesture nine";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 8u:
+            gestureName = "gesture one";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 9u:
+            gestureName = "gesture rh_left";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 10u:
+            gestureName = "gesture rh_right";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 11u:
+            gestureName = "gesture seven";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 12u:
+            gestureName = "gesture six";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 13u:
+            gestureName = "gesture three";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 14u:
+            gestureName = "gesture two";
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        default:
+            gestureName = "gesture others";
+            //UartSendRead(uartFd, InvalidGesture); // 无效值
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+    }
+}
+
+int cmpfunc (const void * a, const void * b) {
+    return ( *(int*)a - *(int*)b );
+}
+
 static HI_VOID HandClassifyAiProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn)
 {
     int ret;
@@ -1613,7 +1706,32 @@ static HI_VOID HandClassifyAiProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, V
 
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug.model, &resizeFrm, &frm); //Get result from model, returns the return value of CnnCalU8c1Img()
+        static RecogNumInfo numInfo[4] = {0};
+        RecogNumInfo hundredResults[100];
+        unsigned int hundredResultsNum[100];
+        for(int i = 0; i < 100; i++){
+            ret = Yolo2HandDetectResnetClassifyCal(g_workPlug.model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+            hundredResults[i] = numInfo[0];
+            hundredResultsNum[i] = numInfo[0].num;
+        }
+        int recogResultOccurences[15];
+        int maxResultOccurence = 0;
+        int maxOccuredResultNum = 0;
+        qsort(hundredResultsNum, 100, sizeof(int), cmpfunc);
+        int resultCounter = 0;
+        for(int i = 1; i < 100; i++){
+            if(hundredResultsNum[i] != hundredResultsNum[i - 1]){
+                if(resultCounter <= maxResultOccurence){
+                    maxResultOccurence = resultCounter;
+                    maxOccuredResultNum = i;
+                }
+                resultCounter = 0;
+            }else{
+                resultCounter++;
+            }
+        }
+        HandDetectFlag(hundredResults[maxOccuredResultNum]);
+
         SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
             "hand classify plug cal FAIL, ret=%#x\n", ret);
 
@@ -1773,11 +1891,6 @@ static HI_S32 PauseDoUnloadHandClassifyModel(HI_VOID)
 
     return s32Ret;
 }
-
-/*
- * Display the data collected by sensor to LCD screen
- * VI->VPSS->VO->MIPI
- */
 
 /*
  * Display the data collected by sensor to LCD screen
