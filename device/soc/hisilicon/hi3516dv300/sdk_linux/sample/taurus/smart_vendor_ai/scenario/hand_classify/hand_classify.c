@@ -241,8 +241,6 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
 
         // Crop the image to classification network
         RectBox targetBox = cnnBoxs[biggestBoxIndex];
-        targetBox.ymax += 50;
-        targetBox.ymin -= 50;
         //MppFrmDrawRects(dstFrm, targetBox, 1, RGB888_GREEN, DRAW_RETC_THICK); //
         ret = ImgYuvCrop(&img, &imgIn, &targetBox);
         SAMPLE_PRT("\nxmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped
