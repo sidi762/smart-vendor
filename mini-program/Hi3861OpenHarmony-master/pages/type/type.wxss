@@ -1,0 +1,48 @@
+/*index.wxss*/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aaa;
+}
+.userinfo-avatar {
+  overflow: hidden;
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+.usermotto {
+  margin-top: 100px;
+}
+.usertext {
+  margin-top: 100px;
+}
+.userDevice {
+  width: 128px;
+  height: 128px;
+}
+.text_device {
+  width: 100px;
+  height: 100px;
+}
+.layout_horizontal{
+  height: 250rpx;
+  display: flex;
+  flex-direction: row;
+}
+.demo-text-1{
+  background-color: green;
+}
+.demo-text-2{
+  background-color: hsl(214, 55%, 53%);
+}
+.demo-text-3{
+  background-color: hsl(214, 4%, 69%);
+}
+
+
+
+
+
+

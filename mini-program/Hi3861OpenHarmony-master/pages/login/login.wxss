@@ -1,0 +1,76 @@
+/* pages/login/login.wxss */
+.logo{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo image{
+  margin-top: 140rpx;
+  width: 216rpx;
+  height: 200rpx;
+}
+.form{
+  padding: 40rpx;
+}
+.form .row-group{
+  padding: 20rpx 0;
+  position: relative;
+  border-bottom: 1rpx solid #ddd;
+}
+
+.form .row-group text{
+  font-size: 28rpx;
+  padding:10rpx 0;
+}
+
+.form .row-group input{
+  padding: 10rpx 0;
+}
+
+.form .row-group .txt{
+  color: #ccc;
+}
+
+.form .row-group .code{
+  position: absolute;
+  right: 0;
+  bottom: 26rpx;
+  z-index: 2;
+
+  width: 206rpx;
+  height: 60rpx;
+  border: 2rpx solid #00c8b6;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  font-weight: 400;
+  color: #00c8b6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form .submit{
+  margin-top: 80rpx;
+  color: #fff;
+  border: 2rpx solid #00c8b6;
+  background-color: #00c8b6;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.parentstyle {
+  margin-left: 38rpx;
+  margin-top: 30rpx;
+  margin-right: 38rpx;
+}
+
+.centerStyle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.imageStyle {
+  width: 41rpx;
+  height: 41rpx;
+  margin-right: 20rpx;
+}

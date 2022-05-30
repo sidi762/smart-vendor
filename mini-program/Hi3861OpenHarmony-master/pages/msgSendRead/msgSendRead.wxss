@@ -1,0 +1,103 @@
+.intro {
+  margin: 30px;
+  text-align: center;
+}
+.center{
+  display: inline-block;
+  margin-top: 50rpx;
+  width: 100%;
+  text-align: center;
+}
+
+.header{
+  padding: 20rpx;
+  border-bottom: solid 1px #dfdfdf;
+}
+.headerItem{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10rpx;
+  height: 50rpx;
+}
+
+.headerItem > text{
+  color: #333;
+  width: 150rpx;
+  font-size: 30rpx;
+  text-align: right;
+}
+
+.headerItem  > input{
+  border: solid 1px #dfdfdf;
+}
+.content{
+  padding: 0 20rpx;
+}
+
+.content > view{
+  margin-top: 10rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.content > .fromLeft > text{
+  padding: 10rpx;
+  width: 690rpx;
+  text-align: left;
+  background-color: orangered;
+  color: white;
+}
+
+.content > .fromRight > text{
+  padding: 10rpx;
+  width: 690rpx;
+  text-align: right;
+  background-color: #dfdfdf;
+  color: white;
+}
+
+.footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20rpx;
+  margin-top: 20rpx;
+}
+
+.footer > input{
+  border: solid 2rpx #dfdfdf;
+  border-radius: 4rpx;
+  width: 500rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  margin-right: 10rpx;
+}
+
+.footer > button{
+  width: 200rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
+
+.selects{
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.selects>.select{
+  margin: 30rpx;
+  width: 80%;
+}
+.selects>.select>.btn{
+  background-color: yellowgreen;
+  color: white;
+  border-radius: 98rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
