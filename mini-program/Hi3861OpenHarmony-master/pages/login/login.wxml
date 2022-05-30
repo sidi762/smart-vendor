@@ -1,0 +1,27 @@
+<!--pages/login/login.wxml-->
+<view class="logo">
+  <image src='/image/HiSpark.png'></image>
+  <text>一键连接WiFi</text>
+</view>
+
+<view class="form">
+  <view class="row-group">
+    <text>WiFi名称</text>
+    <input placeholder-class='txt' maxlength='32' placeholder = "请输入WiFi名称" bindinput="bindWiFiSSIDInput"/>
+  </view>
+  
+  <view class='row-group'>
+    <text>WiFi密码</text>
+      <view class='centerStyle'>
+        <input bindinput="bindPasswordInput" maxlength="32" password='{{passwordType}}' placeholder="请输入密码" style='font-size:34rpx'></input>
+        <image src='{{defaultType? "/image/eye_close.png": "/image/eye_open.png"}}' class='imageStyle' bindtap='eyeStatus'></image>
+      </view>
+  </view>
+
+  <view>
+    <button class="submit" bindtap="onClickSubmit">启动WiFi连接</button>
+  </view>
+  <view>
+    <button class="submit" bindtap="onClickJump">已经连接wifi,跳过配网</button>
+  </view>
+</view>

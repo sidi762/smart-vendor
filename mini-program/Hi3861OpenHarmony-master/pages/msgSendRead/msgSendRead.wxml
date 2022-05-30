@@ -1,0 +1,63 @@
+<view>
+		<!-- <button type="default" bindtap="SendMsg">SendMsg</button> -->
+		<text class="center">{{message}}</text>
+
+		<view class='header'>
+    <view>
+      <text>绑定本机端口:{{hostport}}</text>
+    </view>
+    <view class='headerItem'>
+        <text>IP地址：</text>
+        <input type='text' bindinput='addIp'></input>
+      </view>
+    <view class='headerItem'>
+      <text>端口：</text>
+      <input type='number' bindinput='addPort'></input>
+    </view>
+  </view>
+  <view class='content'>
+      <block wx:for="{{messageList}}" wx:key="{{index}}">
+        <view wx:if="{{item.from === 1}}" class='fromLeft'>
+          <text>{{item.text}}</text>
+        </view>
+        <view wx:else class='fromRight'>
+          <text>{{item.text}}</text>
+        </view>
+      </block>
+  </view>
+  <view class='footer'>
+    <input type='text' bindinput='addMessage'></input>
+    <button bindtap='SendMsg'>发送</button>
+  </view>
+
+  <view wx:if="{{sty==0}}">
+  <view class="score" style="background-color:{{score}};" catchtap='score'>
+    <text>按钮一</text>
+  </view>
+</view>
+
+<!-- <button class='btn1' open-type='openSetting'>
+    <image class='btnImg' src='../../images/wechat.png'></image>
+    <view>确定</view>
+ </button> -->
+
+<view class='selects' >
+<block wx:key="index" wx:for='{{ selects }}'>
+<view class='select' id='{{index}}'bindtap='changeColor'>
+<block wx:if="{{index==clickId}}" >
+<button class='btn' bindtap='light_on'>
+{{ item }}
+<text>灯开</text>
+</button>
+</block>
+<block wx:else >
+<button class='btn'  style="background-color:burlywood" bindtap='light_off'>
+{{ item }}
+<text>灯关</text>
+</button>
+</block>
+</view>
+</block>
+</view>
+
+</view>
