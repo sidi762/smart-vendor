@@ -176,10 +176,10 @@ static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER 
 {
     int ret;
     if (GetCfgBool("hand_classify_switch:support_hand_classify", true)) {
-        if (&(*g_workPlug.model) == 0) {
-            ret = Yolo2HandDetectResnetClassifyLoad(&(*g_workPlug.model));
+        if (&(g_workPlug->model) == 0) {
+            ret = Yolo2HandDetectResnetClassifyLoad(&(g_workPlug->model));
             if (ret < 0) {
-                &(*g_workPlug.model) = 0;
+                &(g_workPlug->model) = 0;
                 SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
                     "load hand classify model err, ret=%#x\n", ret);
             }
@@ -191,7 +191,7 @@ static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER 
         RecogNumInfo hundredResults[100];
         unsigned int hundredResultsNum[100];
         for(int i = 0; i < 100; i++){
-            ret = Yolo2HandDetectResnetClassifyCal(&(*g_workPlug.model), &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+            ret = Yolo2HandDetectResnetClassifyCal(&(g_workPlug->model), &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
             hundredResults[i] = numInfo[0];
             hundredResultsNum[i] = numInfo[0].num;
         }
@@ -224,9 +224,9 @@ static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER 
     }
 
     HAND_RELEASE:
-        ret = HI_MPI_VPSS_ReleaseChnFrame(*g_aicMediaInfo.vpssGrp, *g_aicMediaInfo.vpssChn0, &frm);
+        ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm);
         if (ret != HI_SUCCESS) {
             SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
-                ret, *g_aicMediaInfo.vpssGrp, *g_aicMediaInfo.vpssChn0);
+                ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
         }
 }
