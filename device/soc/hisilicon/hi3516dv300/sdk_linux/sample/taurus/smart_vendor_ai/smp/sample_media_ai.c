@@ -34,6 +34,7 @@
 #include "osd_img.h"
 #include "posix_help.h"
 #include "sample_media_ai.h"
+#include "hisignalling.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -1603,7 +1604,7 @@ int ViVpssCreate(MppSess** sess, const ViCfg* viCfg, const VpssCfg* vpssCfg)
 /* hand gesture recognition info */
 static void HandDetectFlagSample(const RecogNumInfo resBuf)
 {
-    
+
     /* uart open init */
     uartFd = UartOpenInit();
     if (uartFd < 0) {
