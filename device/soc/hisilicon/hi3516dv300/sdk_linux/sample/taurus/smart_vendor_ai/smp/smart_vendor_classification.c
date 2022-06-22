@@ -21,6 +21,9 @@
 #include "smart_vendor_classification.h"
 #include "hisignalling.h"
 
+#define HAND_FRM_WIDTH    640
+#define HAND_FRM_HEIGHT   384
+
 /* hand gesture recognition info */
 static void HandDetectFlagSample(const RecogNumInfo resBuf)
 {
