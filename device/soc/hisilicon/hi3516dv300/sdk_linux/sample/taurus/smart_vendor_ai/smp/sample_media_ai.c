@@ -100,6 +100,40 @@ typedef struct StSampleUserVoConfigs {
     combo_dev_cfg_t stcombo_dev_cfgl;
 } SAMPLE_USER_VO_CONFIG_S;
 
+static HI_VOID* VendorGetVpssChnFrameAndClassify(HI_VOID* arg)
+{
+    int ret;
+    VIDEO_FRAME_INFO_S frm;
+    HI_S32 s32MilliSec = 2000;
+    VO_LAYER voLayer = 0;
+    VO_CHN voChn = 0;
+
+    SAMPLE_PRT("vpssGrp:%d, vpssChn0:%d\n", g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
+
+    while (HI_FALSE == g_bAiProcessStopSignal) {
+        ret = HI_MPI_VPSS_GetChnFrame(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, &frm, s32MilliSec);
+        if (ret != 0) {
+            SAMPLE_PRT("HI_MPI_VPSS_GetChnFrame FAIL, err=%#x, grp=%d, chn=%d\n",
+                ret, g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
+            ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, &frm);
+            if (ret != HI_SUCCESS) {
+                SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
+                    ret, g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
+            }
+            continue;
+        }
+        SAMPLE_PRT("get vpss frame success, weight:%d, height:%d\n", frm.stVFrame.u32Width, frm.stVFrame.u32Height);
+
+        if (g_num == 0) {
+            ConfBaseInit(AI_SAMPLE_CFG_FILE);
+            g_num++;
+        }
+        VendorHandClassificationProcess(frm, voLayer, voChn, &g_workPlug, &g_aicMediaInfo);
+    }
+
+    return HI_NULL;
+}
+
 static HI_S32 VendorHandClassificationCreateThread(HI_VOID)
 {
     //BUFFER_SIZE = 16
@@ -1671,39 +1705,6 @@ static HI_VOID VpssParamCfg(HI_VOID)
 }
 
 
-static HI_VOID* VendorGetVpssChnFrameAndClassify(HI_VOID* arg)
-{
-    int ret;
-    VIDEO_FRAME_INFO_S frm;
-    HI_S32 s32MilliSec = 2000;
-    VO_LAYER voLayer = 0;
-    VO_CHN voChn = 0;
-
-    SAMPLE_PRT("vpssGrp:%d, vpssChn0:%d\n", g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
-
-    while (HI_FALSE == g_bAiProcessStopSignal) {
-        ret = HI_MPI_VPSS_GetChnFrame(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, &frm, s32MilliSec);
-        if (ret != 0) {
-            SAMPLE_PRT("HI_MPI_VPSS_GetChnFrame FAIL, err=%#x, grp=%d, chn=%d\n",
-                ret, g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
-            ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, &frm);
-            if (ret != HI_SUCCESS) {
-                SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
-                    ret, g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
-            }
-            continue;
-        }
-        SAMPLE_PRT("get vpss frame success, weight:%d, height:%d\n", frm.stVFrame.u32Width, frm.stVFrame.u32Height);
-
-        if (g_num == 0) {
-            ConfBaseInit(AI_SAMPLE_CFG_FILE);
-            g_num++;
-        }
-        VendorHandClassificationProcess(frm, voLayer, voChn, &g_workPlug, &g_aicMediaInfo);
-    }
-
-    return HI_NULL;
-}
 
 static HI_S32 PauseDoUnloadHandClassifyModel(HI_VOID)
 {
