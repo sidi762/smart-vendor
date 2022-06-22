@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
-
+static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn);
 
 #ifdef __cplusplus
 #if __cplusplus
