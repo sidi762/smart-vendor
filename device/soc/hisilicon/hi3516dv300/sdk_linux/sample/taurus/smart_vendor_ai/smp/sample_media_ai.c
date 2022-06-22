@@ -100,6 +100,19 @@ typedef struct StSampleUserVoConfigs {
     combo_dev_cfg_t stcombo_dev_cfgl;
 } SAMPLE_USER_VO_CONFIG_S;
 
+static HI_S32 VendorHandClassificationCreateThread(HI_VOID)
+{
+    //BUFFER_SIZE = 16
+    HI_S32 s32Ret;
+    if (snprintf_s(acThreadName, 16, 15, "AIProcess") < 0) {
+        HI_ASSERT(0);
+    }
+    prctl(PR_SET_NAME, (unsigned long)acThreadName, 0, 0, 0);
+    s32Ret = pthread_create(&g_aiProcessThread, NULL, VendorGetVpssChnFrameAndClassify, NULL);
+
+    return s32Ret;
+}
+
 HI_VOID SAMPLE_VOU_SYS_Exit(void)
 {
     HI_MPI_SYS_Exit();
@@ -1789,19 +1802,6 @@ EXIT1:
     free(g_aicMediaInfo.viSess);
 EXIT:
     SAMPLE_COMM_SYS_Exit();
-    return s32Ret;
-}
-
-static HI_S32 VendorHandClassificationCreateThread(HI_VOID)
-{
-    //BUFFER_SIZE = 16
-    HI_S32 s32Ret;
-    if (snprintf_s(acThreadName, 16, 15, "AIProcess") < 0) {
-        HI_ASSERT(0);
-    }
-    prctl(PR_SET_NAME, (unsigned long)acThreadName, 0, 0, 0);
-    s32Ret = pthread_create(&g_aiProcessThread, NULL, VendorGetVpssChnFrameAndClassify, NULL);
-
     return s32Ret;
 }
 
