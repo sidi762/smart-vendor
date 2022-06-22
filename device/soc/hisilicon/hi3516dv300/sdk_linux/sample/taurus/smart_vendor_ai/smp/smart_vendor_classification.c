@@ -190,7 +190,7 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
 
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
-        static RecogNumInfo numInfo[4] = {0};
+        RecogNumInfo numInfo[4] = {1};
 
         /*
         RecogNumInfo hundredResults[100];
