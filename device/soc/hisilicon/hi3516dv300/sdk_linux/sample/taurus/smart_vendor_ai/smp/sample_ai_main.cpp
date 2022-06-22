@@ -56,8 +56,10 @@ int main(int argc, char *argv[])
     //         SmartVendorUsage(argv[0]);
     //         break;
     // }
+    if(true){ //Stage 2
+        SMART_VENDOR_HAND_CLASSIFY();
+    }
 
-    SMART_VENDOR_HAND_CLASSIFY();
 
 
     sdk_exit();
