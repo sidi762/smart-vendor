@@ -17,6 +17,7 @@
 #define SMART_VENDOR_AI_CLASSIFICATION_H
 
 #include "sample_media_ai.h"
+#include "ai_infer_process.h"
 
 #ifdef __cplusplus
 #if __cplusplus
