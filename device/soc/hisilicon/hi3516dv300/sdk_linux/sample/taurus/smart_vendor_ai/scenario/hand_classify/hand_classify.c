@@ -52,7 +52,7 @@ static RectBox boxs[DETECT_OBJ_MAX] = {0};
 static RectBox objBoxs[DETECT_OBJ_MAX] = {0};
 static RectBox remainingBoxs[DETECT_OBJ_MAX] = {0};
 static RectBox cnnBoxs[DETECT_OBJ_MAX] = {0}; // Store the results of the classification network
-//static RecogNumInfo numInfo[RET_NUM_MAX] = {0};
+static RecogNumInfo numInfo[RET_NUM_MAX] = {0};
 static IVE_IMAGE_S imgIn;
 static IVE_IMAGE_S imgDst;
 static VIDEO_FRAME_INFO_S frmIn;
@@ -260,7 +260,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     //SAMPLE_PRT("hand gesture success\n");
 }
 
-HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfo[4])
+HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfoArg[4])
 {
     SAMPLE_SVP_NNIE_CFG_S *self = (SAMPLE_SVP_NNIE_CFG_S*)model;
     HI_S32 resLen = 0;
