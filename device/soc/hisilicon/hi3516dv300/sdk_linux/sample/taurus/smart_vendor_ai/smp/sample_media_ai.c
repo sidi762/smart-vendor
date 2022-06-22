@@ -34,6 +34,7 @@
 #include "osd_img.h"
 #include "posix_help.h"
 #include "sample_media_ai.h"
+#include "smart_vendor_classification.h"
 #include "hisignalling.h"
 
 #ifdef __cplusplus
@@ -1800,6 +1801,88 @@ static HI_S32 PauseDoUnloadHandClassifyModel(HI_VOID)
         g_num = 0;
     }
 
+    return s32Ret;
+}
+
+/*
+ * Display the data collected by sensor to LCD screen
+ * VI->VPSS->VO->MIPI
+ */
+HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID)
+{
+
+    HI_S32             s32Ret;
+    HI_S32             fd = 0;
+
+    /* config vi */
+    ViPramCfg();
+
+    /* get picture size */
+    s32Ret = SAMPLE_COMM_VI_GetSizeBySensor(g_aicMediaInfo.viCfg.astViInfo[0].stSnsInfo.enSnsType,
+        &g_aicMediaInfo.enPicSize);
+    SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "get pic size by sensor fail, s32Ret=%#x\n", s32Ret);
+
+    /* get picture size(w*h), according enPicSize */
+    s32Ret = SAMPLE_COMM_SYS_GetPicSize(g_aicMediaInfo.enPicSize, &g_aicMediaInfo.stSize);
+    SAMPLE_PRT("AIC: snsMaxSize=%ux%u\n", g_aicMediaInfo.stSize.u32Width, g_aicMediaInfo.stSize.u32Height);
+    SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "get picture size failed, s32Ret=%#x\n", s32Ret);
+
+    /* config vb */
+    StVbParamCfg(&g_aicMediaInfo.vbCfg);
+
+    /* vb init & MPI system init */
+    s32Ret = SAMPLE_COMM_SYS_Init(&g_aicMediaInfo.vbCfg);
+    SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "system init failed, s32Ret=%#x\n", s32Ret);
+
+    /* set VO config to mipi, get mipi device */
+    s32Ret = SAMPLE_VO_CONFIG_MIPI(&fd);
+    SAMPLE_CHECK_EXPR_GOTO(s32Ret != HI_SUCCESS, EXIT, "CONFIG MIPI FAIL.s32Ret:0x%x\n", s32Ret);
+
+    /* config vpss */
+    VpssParamCfg();
+    s32Ret = ViVpssCreate(&g_aicMediaInfo.viSess, &g_aicMediaInfo.viCfg, &g_aicMediaInfo.vpssCfg);
+    SAMPLE_CHECK_EXPR_GOTO(s32Ret != HI_SUCCESS, EXIT1, "ViVpss Sess create FAIL, ret=%#x\n", s32Ret);
+    g_aicMediaInfo.vpssGrp = AIC_VPSS_GRP;
+    g_aicMediaInfo.vpssChn0 = AIC_VPSS_ZOUT_CHN;
+
+    /* config vo */
+    StVoParamCfg(&g_aicMediaInfo.voCfg);
+
+    /* start vo */
+    s32Ret = SampleCommVoStartMipi(&g_aicMediaInfo.voCfg);
+    SAMPLE_CHECK_EXPR_GOTO(s32Ret != HI_SUCCESS, EXIT1, "start vo FAIL. s32Ret: 0x%x\n", s32Ret);
+
+    /* vpss bind vo */
+    s32Ret = SAMPLE_COMM_VPSS_Bind_VO(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, g_aicMediaInfo.voCfg.VoDev, 0);
+    SAMPLE_CHECK_EXPR_GOTO(s32Ret != HI_SUCCESS, EXIT2, "vo bind vpss FAIL. s32Ret: 0x%x\n", s32Ret);
+    SAMPLE_PRT("vpssGrp:%d, vpssChn:%d\n", g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0);
+
+    /* create work thread to run ai */
+    s32Ret = VendorHandClassificationCreateThread();
+    SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "failed to create ai proccess thread: %s\n", strerror(s32Ret));
+
+    Pause();
+    g_bAiProcessStopSignal = HI_TRUE;
+    // Waiting for the end of a thread, the operation of synchronization between threads
+    pthread_join(g_aiProcessThread, NULL);
+    g_aiProcessThread = 0;
+    PauseDoUnloadHandClassifyModel();
+
+    SAMPLE_COMM_VPSS_UnBind_VO(g_aicMediaInfo.vpssGrp, g_aicMediaInfo.vpssChn0, g_aicMediaInfo.voCfg.VoDev, 0);
+    SAMPLE_VO_DISABLE_MIPITx(fd);
+    SampleCloseMipiTxFd(fd);
+    system("echo 0 > /sys/class/gpio/gpio55/value");
+
+EXIT2:
+    SAMPLE_COMM_VO_StopVO(&g_aicMediaInfo.voCfg);
+EXIT1:
+    VpssStop(&g_aicMediaInfo.vpssCfg);
+    SAMPLE_COMM_VI_UnBind_VPSS(g_aicMediaInfo.viCfg.astViInfo[0].stPipeInfo.aPipe[0],
+        g_aicMediaInfo.viCfg.astViInfo[0].stChnInfo.ViChn, g_aicMediaInfo.vpssGrp);
+    ViStop(&g_aicMediaInfo.viCfg);
+    free(g_aicMediaInfo.viSess);
+EXIT:
+    SAMPLE_COMM_SYS_Exit();
     return s32Ret;
 }
 

@@ -16,7 +16,7 @@
 #include <iostream>
 #include "unistd.h"
 #include "sdk.h"
-#include "smart_vendor_ai_classification.h"
+#include "smart_vendor_classification.h"
 //#include "sample_media_opencv.h"
 
 using namespace std;

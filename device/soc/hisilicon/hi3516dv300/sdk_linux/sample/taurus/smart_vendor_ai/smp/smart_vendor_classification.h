@@ -24,7 +24,6 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
-HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID);
 
 #ifdef __cplusplus
 #if __cplusplus
