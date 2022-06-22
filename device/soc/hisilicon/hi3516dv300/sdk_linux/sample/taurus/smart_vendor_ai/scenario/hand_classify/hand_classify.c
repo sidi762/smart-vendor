@@ -76,7 +76,63 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
     }
     return ret;
 }
-
+/* hand gesture recognition info */
+static void HandDetectFlagSample(const RecogNumInfo resBuf)
+{
+    int uartFd = 0;
+    /* uart open init */
+    uartFd = UartOpenInit();
+    if (uartFd < 0) {
+        printf("uart1 open failed\r\n");
+    } else {
+        printf("uart1 open successed\r\n");
+    }
+    HI_CHAR *gestureName = NULL;
+    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    switch (resBuf.num) {
+        case 0u:
+            gestureName = "gesture fist";
+            UartSendRead(uartFd, FistGesture); // 拳头手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 1u:
+            gestureName = "gesture indexUp";
+            UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 2u:
+            gestureName = "gesture OK";
+            UartSendRead(uartFd, OkGesture); // OK手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 3u:
+            gestureName = "gesture palm";
+            UartSendRead(uartFd, PalmGesture); // 手掌手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 4u:
+            gestureName = "gesture yes";
+            UartSendRead(uartFd, YesGesture); // yes手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 5u:
+            gestureName = "gesture pinchOpen";
+            UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 6u:
+            gestureName = "gesture phoneCall";
+            UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        default:
+            gestureName = "gesture others";
+            UartSendRead(uartFd, InvalidGesture); // 无效值
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+    }
+    //SAMPLE_PRT("hand gesture success\n");
+}
 HI_S32 Yolo2HandDetectResnetClassifyUnload(uintptr_t model)
 {
     CnnDestroy((SAMPLE_SVP_NNIE_CFG_S*)model);
@@ -204,7 +260,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     //SAMPLE_PRT("hand gesture success\n");
 }
 
-HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfo[])
+HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfo[4])
 {
     SAMPLE_SVP_NNIE_CFG_S *self = (SAMPLE_SVP_NNIE_CFG_S*)model;
     HI_S32 resLen = 0;
@@ -269,7 +325,7 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
             SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "CnnCalU8c1Img FAIL, ret=%#x\n", ret);
             HI_ASSERT(resLen <= sizeof(numInfo) / sizeof(numInfo[0]));
-            //HandDetectFlag(numInfo[0]);
+            HandDetectFlagSample(numInfo[0]);
             MppFrmDestroy(&frmDst);
         }
         IveImgDestroy(&imgIn);

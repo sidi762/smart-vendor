@@ -191,10 +191,11 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
         static RecogNumInfo numInfo[4] = {0};
+
+        /*
         RecogNumInfo hundredResults[100];
         unsigned int hundredResultsNum[100];
 
-        /*
         for(int i = 0; i < 100; i++){
             ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
             hundredResults[i] = numInfo[0];
@@ -219,7 +220,7 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
         */
         ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
-        HandDetectFlagSample(numInfo[0]);
+        //HandDetectFlagSample(numInfo[0]);
 
 
 
