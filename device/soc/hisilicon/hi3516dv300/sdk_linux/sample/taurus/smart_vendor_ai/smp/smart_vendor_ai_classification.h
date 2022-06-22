@@ -16,6 +16,8 @@
 #ifndef SMART_VENDOR_AI_CLASSIFICATION_H
 #define SMART_VENDOR_AI_CLASSIFICATION_H
 
+#include "sample_media_ai.h"
+
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {

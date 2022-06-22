@@ -253,6 +253,18 @@ EXIT:
     return s32Ret;
 }
 
+static HI_S32 VendorHandClassificationCreateThread(HI_VOID)
+{
+    HI_S32 s32Ret;
+    if (snprintf_s(acThreadName, BUFFER_SIZE, BUFFER_SIZE - 1, "AIProcess") < 0) {
+        HI_ASSERT(0);
+    }
+    prctl(PR_SET_NAME, (unsigned long)acThreadName, 0, 0, 0);
+    s32Ret = pthread_create(&g_aiProcessThread, NULL, GetVpssChnFrameHandClassify, NULL);
+
+    return s32Ret;
+}
+
 static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn)
 {
     int ret;
