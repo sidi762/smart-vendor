@@ -53,7 +53,7 @@ executable("smart_vendor_main") {
     "scenario/hand_classify/yolov2_hand_detect.c",
     "smp/sample_ai_main.cpp",
     "smp/sample_media_ai.c",
-    "smp/smart_vendor_ai_classification.c",
+    "smp/smart_vendor_classification.c",
     #"smp/sample_media_opencv.cpp",
     "third_party/src/iniparser/src/dictionary.c",
     "third_party/src/iniparser/src/iniparser.c",
