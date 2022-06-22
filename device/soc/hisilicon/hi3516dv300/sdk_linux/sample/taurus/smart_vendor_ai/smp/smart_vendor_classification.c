@@ -39,12 +39,12 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
     SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
     switch (resBuf.num) {
         case 0u:
-            gestureName = "gesture empty";
+            gestureName = "gesture fist";
             UartSendRead(uartFd, FistGesture); // 拳头手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
-            gestureName = "gesture fist";
+            gestureName = "gesture indexUp";
             UartSendRead(uartFd, ForefingerGesture); // 食指手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
@@ -193,6 +193,8 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         static RecogNumInfo numInfo[4] = {0};
         RecogNumInfo hundredResults[100];
         unsigned int hundredResultsNum[100];
+
+        /*
         for(int i = 0; i < 100; i++){
             ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
             hundredResults[i] = numInfo[0];
@@ -215,6 +217,11 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
             }
         }
         HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
+        */
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+        HandDetectFlagSample(numInfo[0]);
+
+
 
         SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
             "hand classify plug cal FAIL, ret=%#x\n", ret);
