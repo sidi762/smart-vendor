@@ -175,7 +175,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
 int cmpfunc (const void * a, const void * b) {
     return ( *(int*)a - *(int*)b );
 }
-static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
+HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
 {
     int ret;
     if (GetCfgBool("hand_classify_switch:support_hand_classify", true)) {
