@@ -755,3 +755,59 @@ int AiUartTransmit(void)
     }
     return 0;
 }
+
+
+void UartSendResult(int fd, refuseClassification refuseType)
+{
+    /* test buffer */
+    unsigned char writeBuffer2[4] = {0, 2, 0, 1};
+    unsigned char writeBuffer3[4] = {0, 2, 0, 2};
+    unsigned char writeBuffer4[4] = {0, 2, 0, 3};
+    unsigned char writeBuffer5[4] = {0, 2, 0, 4};
+    unsigned char writeBuffer6[4] = {0, 2, 0, 5};
+    unsigned char writeBuffer7[4] = {0, 2, 0, 6};
+    unsigned char writeBuffer8[4] = {0, 2, 0, 7};
+    unsigned char writeBuffer9[4] = {0, 2, 0, 8};
+    unsigned char readBuff[16] = {0};
+
+#ifdef  EXPANSION_BOARD
+    switch (refuseType) {
+        case FistGesture:
+            HisignallingMsgSend(fd, writeBuffer2, sizeof(writeBuffer2)/sizeof(writeBuffer2[0]));
+            printf("send gesture status:FistGesture\r\n");
+            break;
+        case ForefingerGesture:
+            HisignallingMsgSend(fd, writeBuffer3, sizeof(writeBuffer3)/sizeof(writeBuffer3[0]));
+            printf("send gesture status:ForefingerGesture\r\n");
+            break;
+        case OkGesture:
+            HisignallingMsgSend(fd, writeBuffer4, sizeof(writeBuffer4)/sizeof(writeBuffer4[0]));
+            printf("send gesture status:OkGesture\r\n");
+            break;
+        case PalmGesture:
+            HisignallingMsgSend(fd, writeBuffer5, sizeof(writeBuffer5)/sizeof(writeBuffer5[0]));
+            printf("send gesture status:PalmGesture\r\n");
+            break;
+        case YesGesture:
+            HisignallingMsgSend(fd, writeBuffer6, sizeof(writeBuffer6)/sizeof(writeBuffer6[0]));
+            printf("send gesture status:YesGesture\r\n");
+            break;
+        case ForefingerAndThumbGesture:
+            HisignallingMsgSend(fd, writeBuffer7, sizeof(writeBuffer7)/sizeof(writeBuffer7[0]));
+            printf("send gesture status:ForefingerAndThumbGesture\r\n");
+            break;
+        case LittleFingerAndThumbGesture:
+            HisignallingMsgSend(fd, writeBuffer8, sizeof(writeBuffer8)/sizeof(writeBuffer8[0]));
+            printf("send gesture status:LittleFingerAndThumbGesture\r\n");
+            break;
+        case InvalidGesture:
+            HisignallingMsgSend(fd, writeBuffer9, sizeof(writeBuffer9)/sizeof(writeBuffer9[0]));
+            printf("send gesture status:InvalidGesture\r\n");
+            break;
+    }
+#endif
+    /* 串口读操作 */
+    if (readBuff[0] == HISIGNALLING_HEAD_1 && readBuff[1] == HISIGNALLING_HEAD_2) {
+        HisignallingMsgReceive(fd, readBuff, HISIGNALLING_MSG_MOTOR_ENGINE_LEN);
+    }
+}

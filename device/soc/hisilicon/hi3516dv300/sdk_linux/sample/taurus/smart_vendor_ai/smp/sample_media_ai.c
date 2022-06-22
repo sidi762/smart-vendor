@@ -29,7 +29,6 @@
 #include "sdk.h"
 #include "sample_comm.h"
 #include "ai_infer_process.h"
-//#include "cnn_trash_classify.h"
 #include "hand_classify.h"
 #include "vgs_img.h"
 #include "osd_img.h"
@@ -89,6 +88,8 @@ static RECT_S stDefDispRect  = {0, 0, 800, 480};
 static SIZE_S stDefImageSize = {800, 480};
 
 HI_CHAR acThreadName[16] = {0};
+
+int uartFd = 0;
 
 typedef struct StSampleUserVoConfigs {
     VO_SYNC_INFO_S stSyncInfo;
@@ -1598,6 +1599,66 @@ int ViVpssCreate(MppSess** sess, const ViCfg* viCfg, const VpssCfg* vpssCfg)
         return ret;
 }
 
+
+/* hand gesture recognition info */
+static void HandDetectFlagSample(const RecogNumInfo resBuf)
+{
+    
+    /* uart open init */
+    uartFd = UartOpenInit();
+    if (uartFd < 0) {
+        printf("uart1 open failed\r\n");
+    } else {
+        printf("uart1 open successed\r\n");
+    }
+    HI_CHAR *gestureName = NULL;
+    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    switch (resBuf.num) {
+        case 0u:
+            gestureName = "gesture empty";
+            UartSendRead(uartFd, FistGesture); // 拳头手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 1u:
+            gestureName = "gesture fist";
+            UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 2u:
+            gestureName = "gesture OK";
+            UartSendRead(uartFd, OkGesture); // OK手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 3u:
+            gestureName = "gesture palm";
+            UartSendRead(uartFd, PalmGesture); // 手掌手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 4u:
+            gestureName = "gesture yes";
+            UartSendRead(uartFd, YesGesture); // yes手势
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 5u:
+            gestureName = "gesture pinchOpen";
+            UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 6u:
+            gestureName = "gesture phoneCall";
+            UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        default:
+            gestureName = "gesture others";
+            UartSendRead(uartFd, InvalidGesture); // 无效值
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+    }
+    //SAMPLE_PRT("hand gesture success\n");
+}
+
+
 /* hand gesture recognition info */
 static void HandDetectFlag(const RecogNumInfo resBuf)
 {
@@ -1730,7 +1791,7 @@ static HI_VOID HandClassifyAiProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, V
                 resultCounter++;
             }
         }
-        HandDetectFlag(hundredResults[maxOccuredResultNum]);
+        HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
 
         SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
             "hand classify plug cal FAIL, ret=%#x\n", ret);
