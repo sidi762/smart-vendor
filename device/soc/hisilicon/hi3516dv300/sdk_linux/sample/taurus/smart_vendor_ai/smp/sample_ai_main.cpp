@@ -16,7 +16,7 @@
 #include <iostream>
 #include "unistd.h"
 #include "sdk.h"
-#include "sample_media_ai.h"
+#include "smart_vendor_ai_classification.h"
 //#include "sample_media_opencv.h"
 
 using namespace std;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     //         break;
     // }
 
-    SAMPLE_MEDIA_HAND_CLASSIFY();
+    SMART_VENDOR_HAND_CLASSIFY();
 
 
     sdk_exit();
