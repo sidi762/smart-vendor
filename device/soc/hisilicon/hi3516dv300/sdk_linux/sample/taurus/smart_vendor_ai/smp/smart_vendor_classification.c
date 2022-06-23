@@ -42,10 +42,35 @@ void UARTSendResult(SlotSelection selectedSlot)
         printf("uart1 open successed\r\n");
     }
     char* writeBuffer = slotSelectionToJson(selectedSlot);
+    unsigned int len = 0;
+    while(*(writeBuffer + len) != '\0'){
+        printf("%c", *(writeBuffer + len));
+        len += 1;
+    }
+    printf("\n");
+    printf("length: %u\n", len);
 
     #ifdef  EXPANSION_BOARD
 
-    HisignallingMsgSend(uartFd, writeBuffer, sizeof(writeBuffer)/sizeof(writeBuffer[0]));
+    //HisignallingMsgSend(uartFd, writeBuffer, len);
+    unsigned char writeBuffer1[4] = {0, 2, 0, 1};
+    unsigned char writeBuffer2[4] = {0, 2, 0, 2};
+    unsigned char writeBuffer3[4] = {0, 2, 0, 3};
+    unsigned char writeBuffer4[4] = {0, 2, 0, 4};
+    switch (selectedSlot.slot_num) {
+        case 1:
+            HisignallingMsgSend(uartFd, writeBuffer1, sizeof(writeBuffer1)/sizeof(writeBuffer1[0]));
+            break;
+        case 2:
+            HisignallingMsgSend(uartFd, writeBuffer2, sizeof(writeBuffer2)/sizeof(writeBuffer2[0]));
+            break;
+        case 3:
+            HisignallingMsgSend(uartFd, writeBuffer3, sizeof(writeBuffer3)/sizeof(writeBuffer3[0]));
+            break;
+        case 4:
+            HisignallingMsgSend(uartFd, writeBuffer4, sizeof(writeBuffer4)/sizeof(writeBuffer4[0]));
+            break;
+    }
     printf("Product selection result sent\r\n");
 
     #endif
