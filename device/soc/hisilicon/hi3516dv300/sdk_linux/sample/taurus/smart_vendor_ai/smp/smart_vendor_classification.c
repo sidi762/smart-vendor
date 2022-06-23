@@ -31,20 +31,7 @@
 @param int fd: UART file descriptor
 @param SlotSelection: The selected slot
 ----------------------------------------------------------------*/
-void UARTSendResult(int fd, SlotSelection selectedSlot)
-{
-    char* writeBuffer = slotSelectionToJson(selectedSlot);
-
-    #ifdef  EXPANSION_BOARD
-
-    HisignallingMsgSend(fd, writeBuffer, sizeof(writeBuffer)/sizeof(writeBuffer[0]));
-    printf("Product selection result sent\r\n");
-
-    #endif
-}
-
-/* hand gesture recognition info */
-static void HandDetectFlagSample(const RecogNumInfo resBuf)
+void UARTSendResult(SlotSelection selectedSlot)
 {
     int uartFd = 0;
     /* uart open init */
@@ -54,8 +41,21 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
     } else {
         printf("uart1 open successed\r\n");
     }
+    char* writeBuffer = slotSelectionToJson(selectedSlot);
+
+    #ifdef  EXPANSION_BOARD
+
+    HisignallingMsgSend(uartFd, writeBuffer, sizeof(writeBuffer)/sizeof(writeBuffer[0]));
+    printf("Product selection result sent\r\n");
+
+    #endif
+}
+
+/* hand gesture recognition info */
+static void HandDetectFlagSample(const RecogNumInfo resBuf)
+{
     HI_CHAR *gestureName = NULL;
-    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    //SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
 
     SlotSelection selectedSlot;
 
@@ -63,40 +63,40 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
         case 0u:
             gestureName = "gesture fist";
             selectedSlot.slot_num = 1;
-            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
             gestureName = "gesture indexUp";
             selectedSlot.slot_num = 2;
-            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 2u:
             gestureName = "gesture OK";
             selectedSlot.slot_num = 3;
-            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 3u:
             gestureName = "gesture palm";
             selectedSlot.slot_num = 4;
-            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 4u:
             gestureName = "gesture yes";
-            UartSendRead(uartFd, YesGesture); // yes手势
+            //UartSendRead(uartFd, YesGesture); // yes手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 5u:
             gestureName = "gesture pinchOpen";
-            UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 6u:
             gestureName = "gesture phoneCall";
-            UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         default:
@@ -111,7 +111,7 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
 static void HandDetectFlag(const RecogNumInfo resBuf)
 {
     HI_CHAR *gestureName = NULL;
-    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    //SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture eight";
@@ -215,7 +215,7 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
 
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
-        RecogNumInfo numInfo[4] = {1};
+        RecogNumInfo numInfo;
 
         /*
         RecogNumInfo hundredResults[100];
@@ -244,8 +244,8 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         }
         HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
         */
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
-        //HandDetectFlagSample(numInfo[0]);
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+        HandDetectFlagSample(numInfo);
 
 
 

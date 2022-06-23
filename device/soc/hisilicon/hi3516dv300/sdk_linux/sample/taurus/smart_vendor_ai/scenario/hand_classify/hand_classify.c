@@ -260,7 +260,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     //SAMPLE_PRT("hand gesture success\n");
 }
 
-HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo numInfoArg[4])
+HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo *numInfoArg)
 {
     SAMPLE_SVP_NNIE_CFG_S *self = (SAMPLE_SVP_NNIE_CFG_S*)model;
     HI_S32 resLen = 0;
@@ -325,7 +325,8 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
             SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "CnnCalU8c1Img FAIL, ret=%#x\n", ret);
             HI_ASSERT(resLen <= sizeof(numInfo) / sizeof(numInfo[0]));
-            HandDetectFlagSample(numInfo[0]);
+            //HandDetectFlagSample(numInfo[0]);
+            *numInfoArg = numInfo[0];
             MppFrmDestroy(&frmDst);
         }
         IveImgDestroy(&imgIn);

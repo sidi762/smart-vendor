@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef HISIGNALLING_H
 #define HISIGNALLING_H
 
@@ -73,7 +73,7 @@ typedef enum {
 unsigned int UartOpenInit(void);
 void UartSendRead(int fd, refuseClassification refuseType);
 static HisignallingErrorType HisignallingMsgReceive(int fd, unsigned char *buf, unsigned int len);
-static unsigned int HisignallingMsgSend(int fd, char *buf, unsigned int dataLen);
+unsigned int HisignallingMsgSend(int fd, char *buf, unsigned int dataLen);
 unsigned int HisignallingMsgTask(void);
 
 #endif
