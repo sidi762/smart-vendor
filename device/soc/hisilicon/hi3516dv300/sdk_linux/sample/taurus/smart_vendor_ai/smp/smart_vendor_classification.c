@@ -20,9 +20,28 @@
 #include "sample_media_ai.h"
 #include "smart_vendor_classification.h"
 #include "hisignalling.h"
+#include "messaging.h"
 
 #define HAND_FRM_WIDTH    640
 #define HAND_FRM_HEIGHT   384
+
+
+/*----------------------------------------------------------------
+@brief Send the product selection result to 3618 via UART
+@param int fd: UART file descriptor
+@param SlotSelection: The selected slot
+----------------------------------------------------------------*/
+void UARTSendResult(int fd, SlotSelection selectedSlot)
+{
+    string writeBuffer = slotSelectionToJson(selectedSlot);
+
+    #ifdef  EXPANSION_BOARD
+
+    HisignallingMsgSend(fd, writeBuffer, sizeof(writeBuffer)/sizeof(writeBuffer[0]));
+    printf("Product selection result sent\r\n");
+
+    #endif
+}
 
 /* hand gesture recognition info */
 static void HandDetectFlagSample(const RecogNumInfo resBuf)
@@ -37,25 +56,32 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
     }
     HI_CHAR *gestureName = NULL;
     SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+
+    SlotSelection selectedSlot;
+
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture fist";
-            UartSendRead(uartFd, FistGesture); // 拳头手势
+            selectedSlot.slot_num = 1;
+            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
             gestureName = "gesture indexUp";
-            UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            selectedSlot.slot_num = 2;
+            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 2u:
             gestureName = "gesture OK";
-            UartSendRead(uartFd, OkGesture); // OK手势
+            selectedSlot.slot_num = 3;
+            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 3u:
             gestureName = "gesture palm";
-            UartSendRead(uartFd, PalmGesture); // 手掌手势
+            selectedSlot.slot_num = 4;
+            UARTSendResult(uartFd, selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 4u:
@@ -75,7 +101,6 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
             break;
         default:
             gestureName = "gesture others";
-            UartSendRead(uartFd, InvalidGesture); // 无效值
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }

@@ -27,13 +27,6 @@
 #include "cJSON.h"
 #include "messaging.h"
 
-int printCJSONVersion(void)
-{
-    /* print the version */
-    printf("Version: %s\n", cJSON_Version());
-    return 0;
-}
-
 /* Create a bunch of objects as demonstration. */
 int print_preallocated(cJSON *root)
 {
@@ -136,4 +129,22 @@ void create_objects(void)
         exit(EXIT_FAILURE);
     }
 
+}
+
+
+int printCJSONVersion(void)
+{
+    /* print the version */
+    printf("Version: %s\n", cJSON_Version());
+    return 0;
+}
+
+string slotSelectionToJson(SlotSelection selectedSlot)
+{
+    cJSON *root = cJSON_CreateObject();
+    string ret;
+    cJSON_AddNumberToObject(root, "slot_num", selectedSlot.slot_num);
+    ret = cJSON_Print(root);
+    cJSON_Delete(root);
+    return ret;
 }
