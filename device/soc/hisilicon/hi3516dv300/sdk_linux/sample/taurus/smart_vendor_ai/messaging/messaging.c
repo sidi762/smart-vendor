@@ -35,7 +35,7 @@ int printCJSONVersion(void)
 }
 
 /* Create a bunch of objects as demonstration. */
-static int print_preallocated(cJSON *root)
+int print_preallocated(cJSON *root)
 {
     /* declarations */
     char *out = NULL;
