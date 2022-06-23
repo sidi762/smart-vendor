@@ -1,5 +1,5 @@
 .deveco/**
 .vscode/**
-*/.DS_Store
+**/.DS_Store
 .remote-sync.json
 .ftpconfig*
