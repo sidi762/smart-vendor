@@ -33,7 +33,7 @@
 ----------------------------------------------------------------*/
 void UARTSendResult(int fd, SlotSelection selectedSlot)
 {
-    string writeBuffer = slotSelectionToJson(selectedSlot);
+    char* writeBuffer = slotSelectionToJson(selectedSlot);
 
     #ifdef  EXPANSION_BOARD
 

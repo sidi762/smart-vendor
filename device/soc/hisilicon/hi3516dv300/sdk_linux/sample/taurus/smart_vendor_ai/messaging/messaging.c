@@ -139,10 +139,10 @@ int printCJSONVersion(void)
     return 0;
 }
 
-string slotSelectionToJson(SlotSelection selectedSlot)
+char* slotSelectionToJson(SlotSelection selectedSlot)
 {
     cJSON *root = cJSON_CreateObject();
-    string ret;
+    char* ret;
     cJSON_AddNumberToObject(root, "slot_num", selectedSlot.slot_num);
     ret = cJSON_Print(root);
     cJSON_Delete(root);

@@ -37,7 +37,7 @@ typedef struct SlotSelection
 
 int printCJSONVersion(void);
 void create_objects(void);
-
+char* slotSelectionToJson(SlotSelection selectedSlot);
 
 #ifdef __cplusplus
 #if __cplusplus
