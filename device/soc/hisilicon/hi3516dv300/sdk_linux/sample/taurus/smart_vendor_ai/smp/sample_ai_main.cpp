@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     //         break;
     // }
     printCJSONVersion();
-    create_objects();
+    //create_objects();
     if(true){ //Stage 2
         SMART_VENDOR_HAND_CLASSIFY();
     }

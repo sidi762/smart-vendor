@@ -99,6 +99,7 @@ static int print_preallocated(cJSON *root)
     free(buf);
     return 0;
 }
+
 /* Create a bunch of objects as demonstration. */
 void create_objects(void)
 {
