@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <cJSON.h>
-
+#include "cJSON.h"
+#include "messaging.h"
 
 int printCJSONVersion(void)
 {

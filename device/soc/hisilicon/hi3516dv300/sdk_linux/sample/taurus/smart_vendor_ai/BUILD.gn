@@ -55,6 +55,7 @@ executable("smart_vendor_main") {
     "smp/sample_media_ai.c",
     "smp/smart_vendor_classification.c",
     "cjson/cJSON.c",
+    "messaging/messaging.c",
     "third_party/src/iniparser/src/dictionary.c",
     "third_party/src/iniparser/src/iniparser.c",
   ]
@@ -67,6 +68,7 @@ executable("smart_vendor_main") {
     "ai_infer_process",
     "smp",
     "cjson",
+    "messaging",
     "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/platform/common",
     "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/platform/svp/common",
     "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/platform/svp/nnie/sample_nnie_software",

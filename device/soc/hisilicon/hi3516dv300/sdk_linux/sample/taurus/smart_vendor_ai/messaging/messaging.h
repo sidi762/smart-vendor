@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef MESSAGING_H
+#define MESSAGING_H
 
 
 #ifdef __cplusplus
@@ -34,6 +34,10 @@ typedef struct SlotSelection
     int slot_num;
 
 } SlotSelection;
+
+int printCJSONVersion(void);
+static void create_objects(void);
+
 
 #ifdef __cplusplus
 #if __cplusplus
