@@ -14,7 +14,7 @@ extern "C" {
 
 typedef struct SlotInfo
 {
-    const int slot_num;
+    int slot_num;
     char* product_name;
     double product_price;
     char* product_price_string;
