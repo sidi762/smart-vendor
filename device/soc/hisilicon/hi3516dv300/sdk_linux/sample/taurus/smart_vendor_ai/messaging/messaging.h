@@ -12,6 +12,15 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
+int printCJSONVersion(void);
+static void create_objects(void);
+
+
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif
+#endif /* End of #ifdef __cplusplus */
 typedef struct SlotInfo
 {
     const int slot_num;
@@ -34,15 +43,5 @@ typedef struct SlotSelection
     int slot_num;
 
 } SlotSelection;
-
-int printCJSONVersion(void);
-static void create_objects(void);
-
-
-#ifdef __cplusplus
-#if __cplusplus
-}
-#endif
-#endif /* End of #ifdef __cplusplus */
 
 #endif /* End of #ifndef __SAMPLE_MEDIA_AI_H__ */
