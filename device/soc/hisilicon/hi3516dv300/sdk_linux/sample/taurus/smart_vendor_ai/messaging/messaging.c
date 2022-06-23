@@ -100,7 +100,7 @@ static int print_preallocated(cJSON *root)
     return 0;
 }
 /* Create a bunch of objects as demonstration. */
-static void create_objects(void)
+void create_objects(void)
 {
     /* declare a few. */
     cJSON *root = NULL;
