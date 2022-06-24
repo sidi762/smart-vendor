@@ -121,32 +121,32 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture empty";
-            //UartSendRead(uartFd, FistGesture); // 拳头手势
+            UartSendRead(uartFd, FistGesture); // 拳头手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
             gestureName = "gesture fist";
-            //UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            UartSendRead(uartFd, ForefingerGesture); // 食指手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 2u:
             gestureName = "gesture OK";
-            //UartSendRead(uartFd, OkGesture); // OK手势
+            UartSendRead(uartFd, OkGesture); // OK手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 3u:
             gestureName = "gesture palm";
-            //UartSendRead(uartFd, PalmGesture); // 手掌手势
+            UartSendRead(uartFd, PalmGesture); // 手掌手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 4u:
             gestureName = "gesture yes";
-            //UartSendRead(uartFd, YesGesture); // yes手势
+            UartSendRead(uartFd, YesGesture); // yes手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 5u:
             gestureName = "gesture pinchOpen";
-            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 6u:
@@ -211,7 +211,7 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
         // verticalImageBox.ymax = ycenter + 192;
 
         //ret = ImgYuvCrop(&img, &imgIn, &verticalImageBox);
-        
+
         SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
         if ((imgIn.u32Width >= WIDTH_LIMIT) && (imgIn.u32Height >= HEIGHT_LIMIT)) {
