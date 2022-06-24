@@ -28,25 +28,39 @@
 #include "messaging.h"
 #include "json_helper.h"
 
-void messageUARTSendData(int fd, unsigned char *payload)
+void messageUARTSendData(int fd, char *payload)
 {
-    unsigned char len = 0;
-    while(*(payload + len) != '\0'){
-        printf("%c", *(payload + len));
-        len += 1;
+    int lengthInt = 0;
+    while(*(payload + lengthInt) != '\0'){
+        printf("%c", *(payload + lengthInt));
+        lengthInt += 1;
     }
-
+    if(lengthInt > 255){
+        printf("Error: payload too long! Max length is 255");
+        return;
+    }
+    unsigned char len = (unsigned char)lengthInt;
     //Data packging
     unsigned char frameHeader[2] = {0xAA,0x55}; //Frame header
-    unsigned char *dataBuffer;
-    (void)memcpy_s(dataBuffer, 2, frameHeader, 2); //length of frame header = 2 bytes
-    (void)memcpy_s(&dataBuffer[2], 1, len, 1);
-    (void)memcpy_s(&dataBuffer[2], len, payload, len);
+    unsigned char *dataBuffer = (char *) malloc(lengthInt + 4);
+
+    //Frame header
+    *dataBuffer = 0xAA;
+    *(dataBuffer + 1) = 0x55;
+
+    //Payload length
+    *(dataBuffer + 2) = len;
+
+    //Payload
+    for(int i = 3; i <= lengthInt + 3; i+=1){
+        *(dataBuffer + i) = *(payload + i - 3);
+    }
 
     printf("\n");
     printf("length: %u\n", len);
     for (int i = 0; i < len + 3; i++) {
         printf("send data = 0x%x \r\n", *(dataBuffer + i));
     }
-    UartSend(fd, dataBuffer, len); //send frame via UART
+
+    UartSend(fd, dataBuffer, len + 3); //send frame via UART
 }

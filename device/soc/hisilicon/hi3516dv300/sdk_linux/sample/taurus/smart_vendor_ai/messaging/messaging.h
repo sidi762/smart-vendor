@@ -15,9 +15,9 @@ extern "C" {
 /*----------------------------------------------------------------
 @brief Send data to 3618 via UART
 @param int fd: UART file descriptor
-@param unsigned char *payload: The data to send
+@param char *payload: The data to send
 ----------------------------------------------------------------*/
-void messageUARTSendData(int fd, unsigned char *payload);
+void messageUARTSendData(int fd, char *payload);
 
 #ifdef __cplusplus
 #if __cplusplus
