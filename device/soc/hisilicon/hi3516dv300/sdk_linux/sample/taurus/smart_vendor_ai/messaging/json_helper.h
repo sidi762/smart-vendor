@@ -49,9 +49,16 @@ void create_objects(void);
 /*----------------------------------------------------------------
 @brief Convert SlotSelection object (see json_helper.h) to JSON string
 @param SlotSelection selectedSlot: the SlotSelection object to be converted
-@return The string containing JSON representation of the selectedSlot
+@return The string containing JSON representation of selectedSlot
 ----------------------------------------------------------------*/
-char* slotSelectionToJson(SlotSelection selectedSlot);
+char* SlotSelectionToJson(SlotSelection selectedSlot);
+
+/*----------------------------------------------------------------
+@brief Convert UIControl object (see json_helper.h) to JSON string
+@param UIControl UIController: the SlotSelection object to be converted
+@return The string containing JSON representation of UIController
+----------------------------------------------------------------*/
+char* UIControlToJson(UIControl UIController);
 
 #ifdef __cplusplus
 #if __cplusplus

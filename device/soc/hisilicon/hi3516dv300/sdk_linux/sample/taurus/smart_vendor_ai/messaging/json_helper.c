@@ -140,11 +140,21 @@ int printCJSONVersion(void)
     return 0;
 }
 
-char* slotSelectionToJson(SlotSelection selectedSlot)
+char* SlotSelectionToJson(SlotSelection selectedSlot)
 {
     cJSON *root = cJSON_CreateObject();
     char* ret;
     cJSON_AddNumberToObject(root, "slot_num", selectedSlot.slot_num);
+    ret = cJSON_Print(root);
+    cJSON_Delete(root);
+    return ret;
+}
+
+char* UIControlToJson(UIControl UIController)
+{
+    cJSON *root = cJSON_CreateObject();
+    char* ret;
+    cJSON_AddNumberToObject(root, "ui_page_num", UIController.ui_page_num);
     ret = cJSON_Print(root);
     cJSON_Delete(root);
     return ret;
