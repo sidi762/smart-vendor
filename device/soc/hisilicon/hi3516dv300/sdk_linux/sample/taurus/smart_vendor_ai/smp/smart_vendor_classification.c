@@ -21,15 +21,18 @@
 #include "smart_vendor_classification.h"
 #include "hisignalling.h"
 #include "messaging.h"
+#include "json_helper.h"
+
 
 #define HAND_FRM_WIDTH    640
 #define HAND_FRM_HEIGHT   384
 
 
+
 /*----------------------------------------------------------------
 @brief Send the product selection result to 3618 via UART
 @param int fd: UART file descriptor
-@param SlotSelection: The selected slot
+@param SlotSelection selectedSlot: The selected slot
 ----------------------------------------------------------------*/
 void UARTSendResult(SlotSelection selectedSlot)
 {
@@ -41,18 +44,12 @@ void UARTSendResult(SlotSelection selectedSlot)
     } else {
         printf("uart1 open successed\r\n");
     }
-    char* writeBuffer = slotSelectionToJson(selectedSlot);
-    unsigned int len = 0;
-    while(*(writeBuffer + len) != '\0'){
-        printf("%c", *(writeBuffer + len));
-        len += 1;
-    }
-    printf("\n");
-    printf("length: %u\n", len);
+    char* payload = slotSelectionToJson(selectedSlot);
 
     #ifdef  EXPANSION_BOARD
-
+    messageUARTSendData(uartFd, payload);
     //HisignallingMsgSend(uartFd, writeBuffer, len);
+    /*
     unsigned char writeBuffer1[4] = {0, 2, 0, 1};
     unsigned char writeBuffer2[4] = {0, 2, 0, 2};
     unsigned char writeBuffer3[4] = {0, 2, 0, 3};
@@ -71,6 +68,7 @@ void UARTSendResult(SlotSelection selectedSlot)
             HisignallingMsgSend(uartFd, writeBuffer4, sizeof(writeBuffer4)/sizeof(writeBuffer4[0]));
             break;
     }
+    */
     printf("Product selection result sent\r\n");
 
     #endif
@@ -137,10 +135,10 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
 {
     HI_CHAR *gestureName = NULL;
     //SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    SlotSelection selectedSlot;
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture eight";
-            //UartSendRead(uartFd, FistGesture); // 拳头手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
@@ -160,7 +158,8 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
             break;
         case 4u:
             gestureName = "gesture four";
-            //UartSendRead(uartFd, YesGesture); // yes手势
+            selectedSlot.slot_num = 4;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 5u:
@@ -180,7 +179,8 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
             break;
         case 8u:
             gestureName = "gesture one";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            selectedSlot.slot_num = 1;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 9u:
@@ -205,12 +205,14 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
             break;
         case 13u:
             gestureName = "gesture three";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            selectedSlot.slot_num = 3;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 14u:
             gestureName = "gesture two";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            selectedSlot.slot_num = 2;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         default:

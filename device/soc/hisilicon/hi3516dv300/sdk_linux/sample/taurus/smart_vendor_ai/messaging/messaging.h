@@ -12,32 +12,12 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
-typedef struct SlotInfo
-{
-    int slot_num;
-    char* product_name;
-    double product_price;
-    char* product_price_string;
-    int remaining_num;
-
-} SlotInfo;
-
-typedef struct UIControl
-{
-    int ui_page_num;
-
-} UIControl;
-
-
-typedef struct SlotSelection
-{
-    int slot_num;
-
-} SlotSelection;
-
-int printCJSONVersion(void);
-void create_objects(void);
-char* slotSelectionToJson(SlotSelection selectedSlot);
+/*----------------------------------------------------------------
+@brief Send data to 3618 via UART
+@param int fd: UART file descriptor
+@param unsigned char *payload: The data to send
+----------------------------------------------------------------*/
+void messageUARTSendData(int fd, unsigned char *payload);
 
 #ifdef __cplusplus
 #if __cplusplus
