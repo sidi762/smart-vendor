@@ -159,3 +159,22 @@ char* UIControlToJson(UIControl UIController)
     cJSON_Delete(root);
     return ret;
 }
+
+char* vendorDataToJson(SlotInfo items[]);
+{
+    int numOfItems = (sizeof(slotData)/sizeof(slotData[0]));
+    cJSON *root = NULL;
+    cJSON *fld = NULL;
+    root = cJSON_CreateArray();
+    for(int i = 0; i < numOfItems; i += 1){
+        cJSON_AddItemToArray(root, fld = cJSON_CreateObject());
+        cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
+        cJSON_AddNumberToObject(fld, "product_price", items[i].product_price);
+        cJSON_AddNumberToObject(fld, "remaining_num", items[i].remaining_num);
+        cJSON_AddStringToObject(fld, "product_name", items[i].product_name);
+        cJSON_AddStringToObject(fld, "product_price_string", items[i].product_price_string);
+    }
+    ret = cJSON_Print(root);
+    cJSON_Delete(root);
+    return ret;
+}

@@ -60,6 +60,13 @@ char* SlotSelectionToJson(SlotSelection selectedSlot);
 ----------------------------------------------------------------*/
 char* UIControlToJson(UIControl UIController);
 
+/*----------------------------------------------------------------
+@brief Convert a array of SlotInfo object (see json_helper.h) to JSON string
+@param SlotInfo items[]: the array of SlotInfo object to be converted
+@return The string containing JSON representation of items[]
+----------------------------------------------------------------*/
+char* vendorDataToJson(SlotInfo items[]);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

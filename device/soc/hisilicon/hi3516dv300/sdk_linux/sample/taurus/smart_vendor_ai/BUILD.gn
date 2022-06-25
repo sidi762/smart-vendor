@@ -57,6 +57,7 @@ executable("smart_vendor_main") {
     "cjson/cJSON.c",
     "messaging/messaging.c",
     "messaging/json_helper.c",
+    "messaging/data_store.c",
     "third_party/src/iniparser/src/dictionary.c",
     "third_party/src/iniparser/src/iniparser.c",
   ]
