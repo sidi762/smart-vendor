@@ -63,4 +63,5 @@ void messageUARTSendData(int fd, char *payload)
     }
 
     UartSend(fd, dataBuffer, len + 3); //send frame via UART
+    free(dataBuffer);
 }
