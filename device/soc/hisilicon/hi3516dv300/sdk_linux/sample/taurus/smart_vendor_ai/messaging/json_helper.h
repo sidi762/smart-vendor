@@ -15,9 +15,9 @@ extern "C" {
 typedef struct SlotInfo
 {
     int slot_num;
-    char* product_name;
+    char product_name[32];
     double product_price;
-    char* product_price_string;
+    char product_price_string[10];
     int remaining_num;
 
 } SlotInfo;
@@ -63,9 +63,10 @@ char* UIControlToJson(UIControl UIController);
 /*----------------------------------------------------------------
 @brief Convert a array of SlotInfo object (see json_helper.h) to JSON string
 @param SlotInfo items[]: the array of SlotInfo object to be converted
+@param int len: the length of the array
 @return The string containing JSON representation of items[]
 ----------------------------------------------------------------*/
-char* vendorDataToJson(SlotInfo items[]);
+char* vendorDataToJson(SlotInfo items[], int len);
 
 #ifdef __cplusplus
 #if __cplusplus

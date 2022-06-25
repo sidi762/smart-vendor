@@ -105,9 +105,9 @@ void create_objects(void)
     /* Our array of "records": */
     SlotInfo testSlot;
     testSlot.slot_num = 0;
-    testSlot.product_name = "test";
+    //testSlot.product_name = "test";
     testSlot.product_price = 10;
-    testSlot.product_price_string = "10.00";
+    //testSlot.product_price_string = "10.00";
     testSlot.remaining_num = 10;
 
     /* Here we construct some JSON standards, from the JSON site. */
@@ -120,8 +120,8 @@ void create_objects(void)
     cJSON_AddNumberToObject(fld, "slot_num", testSlot.slot_num);
     cJSON_AddNumberToObject(fld, "product_price", testSlot.product_price);
     cJSON_AddNumberToObject(fld, "remaining_num", testSlot.remaining_num);
-    cJSON_AddStringToObject(fld, "product_name", testSlot.product_name);
-    cJSON_AddStringToObject(fld, "product_price_string", testSlot.product_price_string);
+    //cJSON_AddStringToObject(fld, "product_name", testSlot.product_name);
+    //cJSON_AddStringToObject(fld, "product_price_string", testSlot.product_price_string);
 
     /* cJSON_ReplaceItemInObject(cJSON_GetArrayItem(root, 1), "City", cJSON_CreateIntArray(ids, 4)); */
 
@@ -160,13 +160,13 @@ char* UIControlToJson(UIControl UIController)
     return ret;
 }
 
-char* vendorDataToJson(SlotInfo items[]);
+char* vendorDataToJson(SlotInfo items[], int len)
 {
-    int numOfItems = (sizeof(slotData)/sizeof(slotData[0]));
     cJSON *root = NULL;
     cJSON *fld = NULL;
+    char* ret = NULL;
     root = cJSON_CreateArray();
-    for(int i = 0; i < numOfItems; i += 1){
+    for(int i = 0; i < len; i += 1){
         cJSON_AddItemToArray(root, fld = cJSON_CreateObject());
         cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
         cJSON_AddNumberToObject(fld, "product_price", items[i].product_price);

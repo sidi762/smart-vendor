@@ -42,17 +42,27 @@ void fileInit()
 
     if (stat("/userdata/vendor_data", &st) == -1) {
         mkdir("/userdata/vendor_data", 0777);
-        for(int i = 0; i < NUMBER_OF_SLOTS; i += 1){ // Initialize data
-            vendorData[i].slot_num = i + 1;
-            vendorData[i].product_name = "none";
-            vendorData[i].product_price = 0;
-            vendorData[i].product_price_string = "0.00";
-        }
-        char* jsonString = vendorDataToJson(vendorData);
 
+        for(int i = 0; i < NUMBER_OF_SLOTS; i += 1){ // Initialize data
+            printf("i = %d\n", i);
+            vendorData[i].slot_num = i + 1;
+            strcpy(vendorData[i].product_name, "none");
+            strcpy(vendorData[i].product_price_string, "0.00");
+            vendorData[i].product_price = 0;
+            vendorData[i].remaining_num = 3;
+        }
+        char* jsonString = vendorDataToJson(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])));
+        /*
+        int lengthCount = 0;
+        while(*(jsonString+lengthCount) != '\0'){
+            printf("%c", *(jsonString+lengthCount));
+            lengthCount += 1;
+        }
+        */
         FILE *fp = NULL;
-        fp = fopen("/userdata/smart_vendor_data/vendor.json", "w+");
-        fprintf(fp, jsonString);
+        fp = fopen("/userdata/vendor_data/vendor.json", "w+");
+        fputs(jsonString, fp);
+
         fclose(fp);
     }
 
