@@ -18,6 +18,7 @@
 #include "sdk.h"
 #include "smart_vendor_classification.h"
 #include "messaging.h"
+#include "data_store.h"
 //#include "sample_media_opencv.h"
 
 using namespace std;
@@ -57,6 +58,8 @@ int main(int argc, char *argv[])
     //         SmartVendorUsage(argv[0]);
     //         break;
     // }
+
+    fileInit();
 
     if(true){ //Stage 2
         SMART_VENDOR_HAND_CLASSIFY();
