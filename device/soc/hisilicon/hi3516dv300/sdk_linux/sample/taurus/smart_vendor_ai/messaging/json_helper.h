@@ -68,6 +68,16 @@ char* UIControlToJson(UIControl UIController);
 ----------------------------------------------------------------*/
 char* vendorDataToJson(SlotInfo items[], int len);
 
+
+/*----------------------------------------------------------------
+@brief Convert a array of SlotInfo object (see json_helper.h) to JSON string for updating device shadow
+@note clientID is hard coded, should be improved in the future
+@param SlotInfo items[]: the array of SlotInfo object to be converted
+@param int len: the length of the array
+@return The string containing the message for updating device shadow
+----------------------------------------------------------------*/
+char* vendorDataUpdateShadow(SlotInfo items[], int len, int version);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

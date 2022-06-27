@@ -178,3 +178,30 @@ char* vendorDataToJson(SlotInfo items[], int len)
     cJSON_Delete(root);
     return ret;
 }
+
+char* vendorDataUpdateShadow(SlotInfo items[], int len, int version)
+{
+    cJSON *root = cJSON_CreateObject();
+    cJSON *fld = NULL;
+    cJSON *arr = NULL;
+    cJSON *state = NULL;
+    cJSON *reported = NULL;
+    char* ret = NULL;
+    cJSON_AddStringToObject(root, "type", "update");
+    cJSON_AddObjectToObject(root, state = cJSON_CreateObject());
+    cJSON_AddObjectToObject(state, reported = cJSON_CreateObject());
+    cJSON_AddArrayToObject(reported, arr = cJSON_CreateArray());
+    for(int i = 0; i < len; i += 1){
+        cJSON_AddItemToArray(arr, fld = cJSON_CreateObject());
+        cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
+        cJSON_AddNumberToObject(fld, "product_price", items[i].product_price);
+        cJSON_AddNumberToObject(fld, "remaining_num", items[i].remaining_num);
+        cJSON_AddStringToObject(fld, "product_name", items[i].product_name);
+        cJSON_AddStringToObject(fld, "product_price_string", items[i].product_price_string);
+    }
+    cJSON_AddNumberToObject(root, "version", version);
+    cJSON_AddStringToObject(root, "clientToken", "");
+    ret = cJSON_Print(root);
+    cJSON_Delete(root);
+    return ret;
+}
