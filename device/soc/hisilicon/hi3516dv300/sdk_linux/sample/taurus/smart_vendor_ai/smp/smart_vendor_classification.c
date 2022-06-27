@@ -47,7 +47,7 @@ void UARTSendResult(SlotSelection selectedSlot)
     char* payload = SlotSelectionToJson(selectedSlot);
 
     #ifdef  EXPANSION_BOARD
-    
+
     messageUARTSendData(uartFd, payload);
     printf("Product selection result sent\r\n");
 
@@ -142,86 +142,75 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
     SlotSelection selectedSlot;
     switch (resBuf.num) {
         case 0u:
-            gestureName = "gesture eight";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 1u:
-            gestureName = "gesture empty";
-            //UartSendRead(uartFd, ForefingerGesture); // 食指手势
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 2u:
-            gestureName = "gesture fist";
-            //UartSendRead(uartFd, OkGesture); // OK手势
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 3u:
-            gestureName = "gesture five";
-            //UartSendRead(uartFd, PalmGesture); // 手掌手势
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 4u:
-            gestureName = "gesture four";
-            selectedSlot.slot_num = 4;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 5u:
-            gestureName = "gesture lh_left";
-            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 6u:
-            gestureName = "gesture lh_right";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 7u:
-            gestureName = "gesture nine";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 8u:
             gestureName = "gesture one";
             selectedSlot.slot_num = 1;
             UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
-        case 9u:
-            gestureName = "gesture rh_left";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 10u:
-            gestureName = "gesture rh_right";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 11u:
-            gestureName = "gesture seven";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 12u:
-            gestureName = "gesture six";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 13u:
-            gestureName = "gesture three";
-            selectedSlot.slot_num = 3;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 14u:
+        case 1u:
             gestureName = "gesture two";
             selectedSlot.slot_num = 2;
             UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
+        case 2u:
+            gestureName = "gesture three";
+            selectedSlot.slot_num = 3;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 3u:
+            gestureName = "gesture four";
+            selectedSlot.slot_num = 4;
+            UARTSendResult(selectedSlot); //Send result to 3861 via UART
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 4u:
+            gestureName = "gesture five";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 5u:
+            gestureName = "gesture six";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 6u:
+            gestureName = "gesture seven";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 7u:
+            gestureName = "gesture eight";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 8u:
+            gestureName = "gesture nine";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 9u:
+            gestureName = "gesture fist";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 10u:
+            gestureName = "gesture rh_left";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 11u:
+            gestureName = "gesture rh_right";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 12u:
+            gestureName = "gesture lh_left";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 13u:
+            gestureName = "gesture lh_right";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
+        case 14u:
+            gestureName = "gesture empty";
+            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
+            break;
         default:
             gestureName = "gesture others";
-            //UartSendRead(uartFd, InvalidGesture); // 无效值
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }
