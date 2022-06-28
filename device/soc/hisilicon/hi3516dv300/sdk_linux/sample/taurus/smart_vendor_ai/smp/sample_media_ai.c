@@ -43,7 +43,7 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
-static HI_BOOL g_bAiProcessStopSignal = HI_FALSE;
+HI_BOOL g_bAiProcessStopSignal = HI_FALSE;
 static HI_U32 g_num = 0;
 AicMediaInfo g_aicMediaInfo = { 0 };
 static pthread_t g_aiProcessThread = 0;
@@ -1733,7 +1733,7 @@ HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID)
 
     HI_S32             s32Ret;
     HI_S32             fd = 0;
-
+    g_bAiProcessStopSignal = HI_FALSE;
     /* config vi */
     ViPramCfg();
 
@@ -1781,8 +1781,8 @@ HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID)
     s32Ret = VendorHandClassificationCreateThread();
     SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "failed to create ai proccess thread: %s\n", strerror(s32Ret));
 
-    Pause();
-    g_bAiProcessStopSignal = HI_TRUE;
+    //Pause();
+    //g_bAiProcessStopSignal = HI_TRUE;
     // Waiting for the end of a thread, the operation of synchronization between threads
     pthread_join(g_aiProcessThread, NULL);
     g_aiProcessThread = 0;
@@ -1800,7 +1800,9 @@ EXIT1:
     SAMPLE_COMM_VI_UnBind_VPSS(g_aicMediaInfo.viCfg.astViInfo[0].stPipeInfo.aPipe[0],
         g_aicMediaInfo.viCfg.astViInfo[0].stChnInfo.ViChn, g_aicMediaInfo.vpssGrp);
     ViStop(&g_aicMediaInfo.viCfg);
+    SAMPLE_PRT("viSess freed!");
     free(g_aicMediaInfo.viSess);
+    g_aicMediaInfo.viSess = NULL;
 EXIT:
     SAMPLE_COMM_SYS_Exit();
     return s32Ret;

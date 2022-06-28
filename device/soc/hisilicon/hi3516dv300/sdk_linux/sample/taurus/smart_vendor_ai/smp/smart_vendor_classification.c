@@ -131,14 +131,17 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }
+    //g_bAiProcessStopSignal = HI_TRUE;
     //SAMPLE_PRT("hand gesture success\n");
 }
 
 /* hand gesture recognition info */
-static void HandDetectFlag(const RecogNumInfo resBuf)
+static int HandDetectFlag(const RecogNumInfo resBuf)
 {
     HI_CHAR *gestureName = NULL;
-    //SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    if(resBuf.num == 1000) //No hand was detected
+        return 0;
     SlotSelection selectedSlot;
     switch (resBuf.num) {
         case 0u:
@@ -214,6 +217,7 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }
+    return 1;
 }
 
 
@@ -236,6 +240,8 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
         RecogNumInfo numInfo;
+        numInfo.num = 1000;
+        numInfo.score = 1000;//Use 1000 to denote the case of no hand
 
         /*
         RecogNumInfo hundredResults[100];
@@ -264,9 +270,14 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         }
         HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
         */
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
-        HandDetectFlagSample(numInfo);
 
+
+
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+        //HandDetectFlagSample(numInfo);
+        if(HandDetectFlag(numInfo))
+            g_bAiProcessStopSignal = HI_TRUE;
+        //system("cat /proc/umap/vi");
 
 
         SAMPLE_CHECK_EXPR_GOTO(ret < 0, HAND_RELEASE,
@@ -285,4 +296,5 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
             SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
                 ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
         }
+
 }
