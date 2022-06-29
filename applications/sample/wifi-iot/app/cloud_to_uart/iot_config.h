@@ -22,8 +22,8 @@
 
 // < CONFIG THE WIFI
 /* Please modify the ssid and pwd for the own */
-#define CONFIG_AP_SSID  "Sidi_iPhone" // WIFI SSID
-#define CONFIG_AP_PWD   "12345678" // WIFI PWD
+#define CONFIG_AP_SSID  "Metro" // WIFI SSID
+#define CONFIG_AP_PWD   "12364987" // WIFI PWD
 /* Tencent iot Cloud user ID , password */
 #define CONFIG_USER_ID    "YT32IOSCALHi38611_mqtt;12010126;41883;1663689600"
 #define CONFIG_USER_PWD   "b4168d5d4b65898e6984346c81ad13e1b3f112ab7ce46f65cf29455f4c9e18e8;hmacsha256"

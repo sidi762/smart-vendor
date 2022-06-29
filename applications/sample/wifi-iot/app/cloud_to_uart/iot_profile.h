@@ -88,7 +88,8 @@ typedef struct {
 /**
  * use this function to report the property to the iot platform
 */
-int IoTProfilePropertyReport(char *deviceID, WeChatProfile *payload);
+//int IoTProfilePropertyReport(char *deviceID, WeChatProfile *payload);
+int IoTProfilePropertyReport_uart(char *deviceID, char *msg);
 void cJsonInit(void);
 void WifiStaReadyWait(void);
 #endif

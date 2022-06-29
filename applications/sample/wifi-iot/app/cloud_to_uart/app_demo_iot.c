@@ -52,6 +52,7 @@
 
 int g_ligthStatus = -1;
 int control_success = 0;
+UartDefConfig uartDefConfig = {0};
 //int slot1 = 20,slot2 = 20, slot3 = 20, slot4 = 20;
 typedef void (*FnMsgCallBack)(hi_gpio_value val);
 
@@ -152,11 +153,13 @@ static void wechatControlDeviceMsg(hi_gpio_value val)
 static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/*定义3861接收到json文件后的操作*/
 {
     IOT_LOG_DEBUG("RCVMSG:QOS:%d TOPIC:%s PAYLOAD:%s\r\n", qos, topic, payload);
-    int IO = 0;
+    printf(strstr(payload, WECHAT_SUBSCRIBE_control));
     /* 云端下发命令后，板端的操作处理 */
     //if (strcmp(topic, topic_data)==0){
 
      if (strstr(payload, WECHAT_SUBSCRIBE_control) != NULL) {
+        //printf(strstr(payload, WECHAT_SUBSCRIBE_control));
+
         all_engine_reinit();
         if (strstr(payload, WECHAT_SUBSCRIBE_channel1) != NULL) {
             engine_start(6);
@@ -229,7 +232,7 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
         weChatProfile.reportAction.lightActionStatus = 0; // 0: light off 
     }
     //profile report 
-    IoTProfilePropertyReport(CONFIG_USER_ID, &weChatProfile);
+    IoTProfilePropertyReport(CONFIG_USER_ID, &weChatProfile1);
 }*/
 
 // < this is the demo main task entry,here we will set the wifi/cjson/mqtt ready and
@@ -237,19 +240,22 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
 static hi_void *DemoEntry(const char *arg)
 {
     unsigned char *control_flag = "success";
+    //int feedback = 0;
 
-    WifiStaReadyWait();
+
+    /*6WifiStaReadyWait();
     cJsonInit();
     IoTMain();
     /* 云端下发回调 */
     IoTSetMsgCallback(DemoMsgRcvCallBack);
 
-    if (control_success == 1)
+    /*if (control_success == 1)
     {
-        Uart1GpioCOnfig();
-        IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
+        //Uart1GpioCOnfig();
+        feedback = IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
+        printf("feedback: %d", feedback);
      
-    }
+    }*/
     
     /* 主动上报 */
 /*#ifdef TAKE_THE_INITIATIVE_TO_REPORT
@@ -262,6 +268,132 @@ static hi_void *DemoEntry(const char *arg)
     return NULL;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+int SetUartRecvFlag(UartRecvDef def)
+{
+    if (def == UART_RECV_TRUE) {
+        uartDefConfig.g_uartReceiveFlag = HI_TRUE;
+    } else {
+        uartDefConfig.g_uartReceiveFlag = HI_FALSE;
+    }
+    
+    return uartDefConfig.g_uartReceiveFlag;
+}
+
+int GetUartConfig(UartDefType type)
+{
+    int receive = 0;
+
+    switch (type) {
+        case UART_RECEIVE_FLAG:
+            receive = uartDefConfig.g_uartReceiveFlag;
+            break;
+        case UART_RECVIVE_LEN:
+            receive = uartDefConfig.g_uartLen;
+            break;
+        default:
+            break;
+    }
+    return receive;
+}
+
+void ResetUartReceiveMsg(void)
+{
+    (void)memset_s(uartDefConfig.g_receiveUartBuff, sizeof(uartDefConfig.g_receiveUartBuff),
+        0x0, sizeof(uartDefConfig.g_receiveUartBuff));
+}
+
+unsigned char *GetUartReceiveMsg(void)
+{
+    return uartDefConfig.g_receiveUartBuff;
+}
+
+static hi_void *UartDemoTask(char *param)
+{
+    hi_u8 uartBuff[UART_BUFF_SIZE] = {0};
+    char *recBuff = NULL;
+
+    hi_unref_param(param);
+    printf("Initialize uart demo successfully, please enter some datas via DEMO_UART_NUM port...\n");
+    Uart1GpioCOnfig();
+    /*WifiStaReadyWait();
+    cJsonInit();
+    IoTMain();*/
+    for (;;) {
+        uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
+        if ((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55)) {
+            if (GetUartConfig(UART_RECEIVE_FLAG) == HI_FALSE) {
+                (void)memcpy_s(uartDefConfig.g_receiveUartBuff, uartDefConfig.g_uartLen,
+                    uartBuff, uartDefConfig.g_uartLen);/*uartBuff中的信息放到uartDefConfig.g_receiveUartBuff*/
+                (void)SetUartRecvFlag(UART_RECV_TRUE);
+            }
+        }
+        //printf("len:%d\n",  uartDefConfig.g_uartLen);
+        recBuff = (char*)malloc(uartDefConfig.g_uartLen-3);
+
+        for (int i = 0; i<uartDefConfig.g_uartLen; i++)
+        {
+            if(i <= 2)
+            {
+                printf("0x%x ", uartBuff[i]);
+            }
+            else
+            {
+                printf("%c ", uartBuff[i]);
+                recBuff[i-3] = uartBuff[i];
+            }
+
+            
+        }
+
+        //TaskMsleep(20); /* 20:sleep 20ms */
+
+        /*send to cloud*/
+       
+        IoTProfilePropertyReport_uart(CONFIG_USER_ID, recBuff);
+        printf("communicatuon completed");
+        free(recBuff);
+        TaskMsleep(5000);
+        IoTSetMsgCallback(DemoMsgRcvCallBack);
+        
+    }
+    return HI_NULL;
+}
+
+/*
+ * This demo simply shows how to read datas from UART2 port and then echo back.
+ */
+/*hi_void UartTransmit(hi_void)
+{
+    hi_u32 ret = 0;
+
+    IotUartAttribute uartAttr = {
+        .baudRate = 115200, /* baudRate: 115200 
+        .dataBits = 8, /* dataBits: 8bits 
+        .stopBits = 1, /* stop bit 
+        .parity = 0,
+    };
+    /* Initialize uart driver 
+    ret = IoTUartInit(DEMO_UART_NUM, &uartAttr);
+    if (ret != HI_ERR_SUCCESS) {
+        printf("Failed to init uart! Err code = %d\n", ret);
+        return;
+    }
+    /* Create a task to handle uart communication 
+    osThreadAttr_t attr = {0};
+    attr.attr_bits = 0U;
+    attr.cb_mem = NULL;
+    attr.cb_size = 0U;
+    attr.stack_mem = NULL;
+    attr.stack_size = 8096;
+    attr.priority = UART_DEMO_TASK_PRIORITY;
+    attr.name = (hi_char*)"uart demo";
+    if (osThreadNew((osThreadFunc_t)UartDemoTask, NULL, &attr) == NULL) {
+        printf("Falied to create uart demo task!\n");
+    }
+}*/
+//SYS_RUN(UartTransmit);
+///////////////////////////////////////////////////////////////////////////////////////////
 // < This is the demo entry, we create a task here,
 // and all the works has been done in the demo_entry
 #define CN_IOT_TASK_STACKSIZE  0x1000
@@ -286,6 +418,9 @@ static void AppDemoIot(void)
     }
     osThreadAttr_t attr;
     IoTWatchDogDisable();
+    WifiStaReadyWait();
+    cJsonInit();
+    IoTMain();
 
     attr.name = "IOTDEMO";
     attr.attr_bits = 0U;
@@ -295,9 +430,14 @@ static void AppDemoIot(void)
     attr.stack_size = CN_IOT_TASK_STACKSIZE;
     attr.priority = CN_IOT_TASK_PRIOR;
 
-    if (osThreadNew((osThreadFunc_t)DemoEntry, NULL, &attr) == NULL) {
+    /*if (osThreadNew((osThreadFunc_t)DemoEntry, NULL, &attr) == NULL) {
         printf("[mqtt] Falied to create IOTDEMO!\n");
+    }*/
+    //attr.name = "cloud->uart";
+    if (osThreadNew((osThreadFunc_t)UartDemoTask, NULL, &attr) == NULL) {
+        printf("Falied to create uart demo task!\n");
     }
+
 }
 
 SYS_RUN(AppDemoIot);
