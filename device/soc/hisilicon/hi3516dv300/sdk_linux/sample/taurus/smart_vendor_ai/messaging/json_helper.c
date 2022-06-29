@@ -28,6 +28,8 @@
 #include "json_helper.h"
 #include "messaging.h"
 
+#define NUMBER_OF_SLOTS 4
+
 /* Create a bunch of objects as demonstration. */
 int print_preallocated(cJSON *root)
 {
@@ -164,10 +166,13 @@ char* vendorDataToJson(SlotInfo items[], int len)
 {
     cJSON *root = NULL;
     cJSON *fld = NULL;
-    char* ret = NULL;
-    root = cJSON_CreateArray();
+    char *ret = NULL;
+    cJSON *productsArray = NULL;
+
+    root = cJSON_CreateObject();
+    productsArray = cJSON_AddArrayToObject(root, "products");
     for(int i = 0; i < len; i += 1){
-        cJSON_AddItemToArray(root, fld = cJSON_CreateObject());
+        cJSON_AddItemToArray(productsArray, fld = cJSON_CreateObject());
         cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
         cJSON_AddNumberToObject(fld, "product_price", items[i].product_price);
         cJSON_AddNumberToObject(fld, "remaining_num", items[i].remaining_num);
@@ -177,6 +182,63 @@ char* vendorDataToJson(SlotInfo items[], int len)
     ret = cJSON_Print(root);
     cJSON_Delete(root);
     return ret;
+}
+
+int jsonToVendorData(char* jsonString, SlotInfo vendorDataPtr[])
+{
+    const cJSON *item = NULL;
+    const cJSON *items = NULL;
+    const cJSON *slotNumJson = NULL;
+    const cJSON *productPriceJson = NULL;
+    const cJSON *remainingNumJson = NULL;
+    const cJSON *productNameJson = NULL;
+    const cJSON *productPriceStringJson = NULL;
+
+    SlotInfo ret[NUMBER_OF_SLOTS] = {0};
+
+    cJSON *vendorDataJson = cJSON_Parse(jsonString);
+    if (vendorDataJson == NULL){
+       const char *error_ptr = cJSON_GetErrorPtr();
+       if (error_ptr != NULL){
+           fprintf(stderr, "Error before: %s\n", error_ptr);
+           return 1;
+       }
+    }
+
+    items = cJSON_GetObjectItemCaseSensitive(vendorDataJson, "products");
+    int count = 0;
+    cJSON_ArrayForEach(item, items){
+        if(count < NUMBER_OF_SLOTS){
+            slotNumJson = cJSON_GetObjectItemCaseSensitive(item, "slot_num");
+            if (cJSON_IsNumber(slotNumJson)){
+                ret[count].slot_num = slotNumJson->valueint;
+            }
+            productPriceJson = cJSON_GetObjectItemCaseSensitive(item, "product_price");
+            if (cJSON_IsNumber(productPriceJson)){
+                ret[count].product_price = productPriceJson->valueint;
+            }
+            remainingNumJson = cJSON_GetObjectItemCaseSensitive(item, "remaining_num");
+            if (cJSON_IsNumber(remainingNumJson)){
+                ret[count].product_price = remainingNumJson->valueint;
+            }
+            productNameJson = cJSON_GetObjectItemCaseSensitive(item, "product_name");
+            if (cJSON_IsString(productNameJson) && (productNameJson->valuestring != NULL)){
+                strcpy(ret[count].product_name, productNameJson->valuestring);
+            }
+            productPriceStringJson = cJSON_GetObjectItemCaseSensitive(item, "product_price_string");
+            if (cJSON_IsString(productPriceStringJson) && (productPriceStringJson->valuestring != NULL)){
+                strcpy(ret[count].product_price_string, productPriceStringJson->valuestring);
+            }
+            count += 1;
+        }else{
+            printf("Error: items in json is more than number of slots\n");
+            return 1;
+        }
+    }
+
+    vendorDataPtr = ret;
+    cJSON_Delete(vendorDataJson);
+    return 0;
 }
 
 char* vendorDataUpdateShadow(SlotInfo items[], int len, int version)

@@ -19,6 +19,7 @@ typedef struct SlotInfo
     double product_price;
     char product_price_string[10];
     int remaining_num;
+    char imgPath[128];
 
 } SlotInfo;
 
@@ -67,6 +68,14 @@ char* UIControlToJson(UIControl UIController);
 @return The string containing JSON representation of items[]
 ----------------------------------------------------------------*/
 char* vendorDataToJson(SlotInfo items[], int len);
+
+/*----------------------------------------------------------------
+@brief Convert a JSON string and save the result into vendorDataPtr[]
+@param char* jsonString: the JSON string to be converted
+@param SlotInfo vendorDataPtr[]: the result SlotInfo (see json_helper.h)
+@return 0 if successful, 1 if unsuccessful
+----------------------------------------------------------------*/
+int jsonToVendorData(char* jsonString, SlotInfo vendorDataPtr[]);
 
 
 /*----------------------------------------------------------------
