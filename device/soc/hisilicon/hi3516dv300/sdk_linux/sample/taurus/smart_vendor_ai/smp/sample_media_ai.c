@@ -1781,8 +1781,8 @@ HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID)
     s32Ret = VendorHandClassificationCreateThread();
     SAMPLE_CHECK_EXPR_RET(s32Ret != HI_SUCCESS, s32Ret, "failed to create ai proccess thread: %s\n", strerror(s32Ret));
 
-    //Pause();
-    //g_bAiProcessStopSignal = HI_TRUE;
+    Pause();
+    g_bAiProcessStopSignal = HI_TRUE;
     // Waiting for the end of a thread, the operation of synchronization between threads
     pthread_join(g_aiProcessThread, NULL);
     g_aiProcessThread = 0;

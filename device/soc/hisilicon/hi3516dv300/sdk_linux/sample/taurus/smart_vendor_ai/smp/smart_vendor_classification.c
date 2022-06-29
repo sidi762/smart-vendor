@@ -276,7 +276,9 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
         ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
         //HandDetectFlagSample(numInfo);
         if(HandDetectFlag(numInfo))
-            g_bAiProcessStopSignal = HI_TRUE;
+            //g_bAiProcessStopSignal = HI_TRUE;
+
+
         //system("cat /proc/umap/vi");
 
 
