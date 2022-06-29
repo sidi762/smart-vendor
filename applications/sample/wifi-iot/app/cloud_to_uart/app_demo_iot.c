@@ -312,6 +312,8 @@ static hi_void *UartDemoTask(char *param)
 {
     hi_u8 uartBuff[UART_BUFF_SIZE] = {0};
     char *recBuff = NULL;
+    int feedback = 0;
+    unsigned char *control_flag = "success";
 
     hi_unref_param(param);
     printf("Initialize uart demo successfully, please enter some datas via DEMO_UART_NUM port...\n");
@@ -351,10 +353,16 @@ static hi_void *UartDemoTask(char *param)
         /*send to cloud*/
        
         IoTProfilePropertyReport_uart(CONFIG_USER_ID, recBuff);
-        printf("communicatuon completed");
+        printf("communicatuon completed\n");
         free(recBuff);
         TaskMsleep(5000);
         IoTSetMsgCallback(DemoMsgRcvCallBack);
+        if (control_success == 1)
+       {
+        feedback = IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
+        printf("feedback: %d\n", feedback);
+        control_success = 0;
+       }
         
     }
     return HI_NULL;
@@ -430,10 +438,7 @@ static void AppDemoIot(void)
     attr.stack_size = CN_IOT_TASK_STACKSIZE;
     attr.priority = CN_IOT_TASK_PRIOR;
 
-    /*if (osThreadNew((osThreadFunc_t)DemoEntry, NULL, &attr) == NULL) {
-        printf("[mqtt] Falied to create IOTDEMO!\n");
-    }*/
-    //attr.name = "cloud->uart";
+    
     if (osThreadNew((osThreadFunc_t)UartDemoTask, NULL, &attr) == NULL) {
         printf("Falied to create uart demo task!\n");
     }
