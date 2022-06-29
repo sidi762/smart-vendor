@@ -33,15 +33,38 @@
 #include "data_store.h"
 
 #define NUMBER_OF_SLOTS 4
+#define CONFIG_FILE_PATH "/userdata/vendor_data/vendor.json"
+#define CONFIG_FILE_DIR "/userdata/vendor_data"
 
 SlotInfo vendorData[NUMBER_OF_SLOTS] = {0};
+
+SlotInfo testVendorData;
+testVendorData.slot_num = 4;
+strcpy(testVendorData.product_name, "N95 Mask");
+strcpy(testVendorData.product_price_string, "10.50 Yuan");
+testVendorData.product_price = 10.5;
+testVendorData.remaining_num = 3;
+
+SlotInfo loadVendorDataFromFile()
+{
+
+}
+
+void saveVendorDataToFile(SlotInfo vendorData[], int len)
+{
+    char* jsonString = vendorDataToJson(vendorData, len);
+    FILE *fp = NULL;
+    fp = fopen(CONFIG_FILE_PATH, "w+");
+    fputs(jsonString, fp);
+    return;
+}
 
 void fileInit()
 {
     struct stat st = {0};
 
-    if (stat("/userdata/vendor_data", &st) == -1) {
-        mkdir("/userdata/vendor_data", 0777);
+    if (stat(CONFIG_FILE_DIR, &st) == -1) {
+        mkdir(CONFIG_FILE_DIR, 0777);
 
         for(int i = 0; i < NUMBER_OF_SLOTS; i += 1){ // Initialize data
             printf("i = %d\n", i);
@@ -51,19 +74,7 @@ void fileInit()
             vendorData[i].product_price = 0;
             vendorData[i].remaining_num = 3;
         }
-        char* jsonString = vendorDataToJson(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])));
-        /*
-        int lengthCount = 0;
-        while(*(jsonString+lengthCount) != '\0'){
-            printf("%c", *(jsonString+lengthCount));
-            lengthCount += 1;
-        }
-        */
-        FILE *fp = NULL;
-        fp = fopen("/userdata/vendor_data/vendor.json", "w+");
-        fputs(jsonString, fp);
-
-        fclose(fp);
+        saveVendorDataToFile(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])));
     }
 
 }
