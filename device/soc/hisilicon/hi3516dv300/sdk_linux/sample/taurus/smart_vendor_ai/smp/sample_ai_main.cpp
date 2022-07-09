@@ -19,9 +19,6 @@
 #include "smart_vendor_classification.h"
 #include "messaging.h"
 #include "data_store.h"
-//#include "sample_media_opencv.h"
-
-using namespace std;
 
 /* function : show usage */
 static void SmartVendorUsage(char* pchPrgName)

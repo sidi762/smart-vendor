@@ -1783,6 +1783,7 @@ HI_S32 SMART_VENDOR_HAND_CLASSIFY(HI_VOID)
 
     Pause();
     g_bAiProcessStopSignal = HI_TRUE;
+
     // Waiting for the end of a thread, the operation of synchronization between threads
     pthread_join(g_aiProcessThread, NULL);
     g_aiProcessThread = 0;

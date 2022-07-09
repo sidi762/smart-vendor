@@ -114,8 +114,6 @@ void create_objects(void)
 
     /* Here we construct some JSON standards, from the JSON site. */
 
-
-
     /* Our array of "records": */
     root = cJSON_CreateArray();
     cJSON_AddItemToArray(root, fld = cJSON_CreateObject());
@@ -250,9 +248,9 @@ char* vendorDataUpdateShadow(SlotInfo items[], int len, int version)
     cJSON *reported = NULL;
     char* ret = NULL;
     cJSON_AddStringToObject(root, "type", "update");
-    cJSON_AddObjectToObject(root, state = cJSON_CreateObject());
-    cJSON_AddObjectToObject(state, reported = cJSON_CreateObject());
-    cJSON_AddArrayToObject(reported, arr = cJSON_CreateArray());
+    cJSON_AddItemToObject(root, "state", state = cJSON_CreateObject());
+    cJSON_AddItemToObject(state, "reported", reported = cJSON_CreateObject());
+    cJSON_AddItemToObject(reported, "product_info", arr = cJSON_CreateArray());
     for(int i = 0; i < len; i += 1){
         cJSON_AddItemToArray(arr, fld = cJSON_CreateObject());
         cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
