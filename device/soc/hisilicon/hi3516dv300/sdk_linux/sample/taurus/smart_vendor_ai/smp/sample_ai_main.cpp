@@ -41,21 +41,6 @@ int main(int argc, char *argv[])
     /* MIPI is GPIO55, Turn on the backlight of the LCD screen */
     system("cd /sys/class/gpio/;echo 55 > export;echo out > gpio55/direction;echo 1 > gpio55/value");
 
-    // switch (*argv[1]) {
-    //     case '0':
-    //         SAMPLE_MEDIA_CNN_TRASH_CLASSIFY();
-    //         break;
-    //     case '1':
-    //         SAMPLE_MEDIA_HAND_CLASSIFY();
-    //         break;
-    //     case '2':
-    //         mediaOpencv.SAMPLE_MEDIA_TENNIS_DETECT();
-    //         break;
-    //     default:
-    //         SmartVendorUsage(argv[0]);
-    //         break;
-    // }
-
     fileInit();
 
     while(true){ //Stage 2

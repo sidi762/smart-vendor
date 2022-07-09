@@ -27,6 +27,7 @@
 #define HAND_FRM_WIDTH    640
 #define HAND_FRM_HEIGHT   384
 
+RecogNumInfo g_numInfo;
 
 
 /*----------------------------------------------------------------
@@ -89,8 +90,7 @@ static void HandDetectFlagSample(const RecogNumInfo resBuf)
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture fist";
-            selectedSlot.slot_num = 1;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
+
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
@@ -142,80 +142,72 @@ static int HandDetectFlag(const RecogNumInfo resBuf)
     SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
     if(resBuf.num == 1000) //No hand was detected
         return 0;
-    SlotSelection selectedSlot;
+
     switch (resBuf.num) {
         case 0u:
             gestureName = "gesture one";
-            selectedSlot.slot_num = 1;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 1;
         case 1u:
             gestureName = "gesture two";
-            selectedSlot.slot_num = 2;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 2;
         case 2u:
             gestureName = "gesture three";
-            selectedSlot.slot_num = 3;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 3;
         case 3u:
             gestureName = "gesture four";
-            selectedSlot.slot_num = 4;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 4;
         case 4u:
             gestureName = "gesture five";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 5;
         case 5u:
             gestureName = "gesture six";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 6;
         case 6u:
             gestureName = "gesture seven";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 7;
         case 7u:
             gestureName = "gesture eight";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 8;
         case 8u:
             gestureName = "gesture nine";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 9;
         case 9u:
             gestureName = "gesture fist";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 10;
         case 10u:
             gestureName = "gesture rh_left";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 11;
         case 11u:
             gestureName = "gesture rh_right";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 12;
         case 12u:
             gestureName = "gesture lh_left";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 13;
         case 13u:
             gestureName = "gesture lh_right";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 14;
         case 14u:
             gestureName = "gesture empty";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 15;
         default:
             gestureName = "gesture others";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
+            return 16;
     }
     return 1;
 }
@@ -224,7 +216,8 @@ static int HandDetectFlag(const RecogNumInfo resBuf)
 int cmpfunc (const void * a, const void * b) {
     return ( *(int*)a - *(int*)b );
 }
-HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
+
+static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
 {
     int ret;
     if (GetCfgBool("hand_classify_switch:support_hand_classify", true)) {
@@ -239,9 +232,9 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
 
         VIDEO_FRAME_INFO_S resizeFrm;
         ret = MppFrmResize(&frm, &resizeFrm, HAND_FRM_WIDTH, HAND_FRM_HEIGHT);
-        RecogNumInfo numInfo;
-        numInfo.num = 1000;
-        numInfo.score = 1000;//Use 1000 to denote the case of no hand
+
+        g_numInfo.num = 1000;
+        g_numInfo.score = 1000;//Use 1000 to denote the case of no hand
 
         /*
         RecogNumInfo hundredResults[100];
@@ -273,11 +266,8 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
 
 
 
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &g_numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
         //HandDetectFlagSample(numInfo);
-        if(HandDetectFlag(numInfo))
-            //g_bAiProcessStopSignal = HI_TRUE;
-
 
         //system("cat /proc/umap/vi");
 
@@ -299,4 +289,62 @@ HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer
                 ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
         }
 
+}
+
+HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
+{
+    struct arg_struct {
+        AiPlugLib* g_workPlug;
+        AicMediaInfo* g_aicMediaInfo;
+    };
+    struct arg_struct *args = arguments;
+    AiPlugLib* g_workPlug = args -> g_workPlug;
+    AicMediaInfo* g_aicMediaInfo = args -> g_aicMediaInfo;
+    int ret;
+    VIDEO_FRAME_INFO_S frm;
+    HI_S32 s32MilliSec = 2000;
+    VO_LAYER voLayer = 0;
+    VO_CHN voChn = 0;
+
+    SAMPLE_PRT("vpssGrp:%d, vpssChn0:%d\n", g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
+
+    while (HI_FALSE == g_bAiProcessStopSignal) {
+        int retResult = 0;
+        int lastResult = 5000;//initial value
+        for(int i = 0; i < 5; i += 1){
+            ret = HI_MPI_VPSS_GetChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm, s32MilliSec);
+            if (ret != 0) {
+                SAMPLE_PRT("HI_MPI_VPSS_GetChnFrame FAIL, err=%#x, grp=%d, chn=%d\n",
+                    ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
+                ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm);
+                if (ret != HI_SUCCESS) {
+                    SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
+                        ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
+                }
+                continue;
+            }
+            SAMPLE_PRT("get vpss frame success, weight:%d, height:%d\n", frm.stVFrame.u32Width, frm.stVFrame.u32Height);
+
+            VendorHandClassificationProcess(frm, voLayer, voChn, g_workPlug, g_aicMediaInfo);
+
+            if(lastResult == 5000)
+                lastResult = HandDetectFlag(g_numInfo);
+
+            retResult = HandDetectFlag(g_numInfo);
+            if(!retResult || retResult == 15){//No hand
+                i = 0;
+                continue;
+            }
+            if(retResult != lastResult){
+                i = 0;
+                lastResult = retResult;
+            }
+        }
+        SlotSelection selectedSlot;
+        selectedSlot.slot_num = retResult;
+        UARTSendResult(selectedSlot); //Send result to 3861 via UART
+        g_bAiProcessStopSignal = HI_TRUE;
+    }
+
+    return HI_NULL;
 }

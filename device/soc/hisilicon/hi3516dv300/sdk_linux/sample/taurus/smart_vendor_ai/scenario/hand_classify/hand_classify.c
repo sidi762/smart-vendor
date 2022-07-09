@@ -42,7 +42,7 @@ extern "C" {
 #define HEIGHT_LIMIT       32
 #define IMAGE_WIDTH        224  // The resolution of the model IMAGE sent to the classification is 224*224
 #define IMAGE_HEIGHT       224
-#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification.wk" // darknet framework wk model
+#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification_v2_5.wk" // darknet framework wk model
 #define MODEL_FILE_GESTURE_SAMPLE    "/userdata/models/hand_classify/hand_gesture.wk" // darknet framework wk model
 
 static int biggestBoxIndex;
@@ -63,7 +63,7 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
     SAMPLE_SVP_NNIE_CFG_S *self = NULL;
     HI_S32 ret;
 
-    ret = CnnCreate(&self, MODEL_FILE_GESTURE_SAMPLE); // Use sample model for the school contest
+    ret = CnnCreate(&self, MODEL_FILE_GESTURE); // Use sample model for the school contest
     *model = ret < 0 ? 0 : (uintptr_t)self;
     HandDetectInit(); // Initialize the hand detection model
     SAMPLE_PRT("Hand gesture classification model loaded\n");
@@ -114,95 +114,87 @@ static HI_S32 GetBiggestHandIndex(RectBox boxs[], int detectNum)
     return biggestBoxIndex;
 }
 
-/* hand gesture recognition info */
 static void HandDetectFlag(const RecogNumInfo resBuf)
 {
     HI_CHAR *gestureName = NULL;
     SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
+    //SlotSelection selectedSlot;
     switch (resBuf.num) {
         case 0u:
-            gestureName = "gesture eight";
-            //UartSendRead(uartFd, FistGesture); // 拳头手势
+            gestureName = "gesture one";
+            //selectedSlot.slot_num = 1;
+            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
-            gestureName = "gesture empty";
-            //UartSendRead(uartFd, ForefingerGesture); // 食指手势
+            gestureName = "gesture two";
+            //selectedSlot.slot_num = 2;
+            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 2u:
-            gestureName = "gesture fist";
-            //UartSendRead(uartFd, OkGesture); // OK手势
+            gestureName = "gesture three";
+            //selectedSlot.slot_num = 3;
+            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 3u:
-            gestureName = "gesture five";
-            //UartSendRead(uartFd, PalmGesture); // 手掌手势
+            gestureName = "gesture four";
+            //selectedSlot.slot_num = 4;
+            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 4u:
-            gestureName = "gesture four";
-            //UartSendRead(uartFd, YesGesture); // yes手势
+            gestureName = "gesture five";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 5u:
-            gestureName = "gesture lh_left";
-            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
+            gestureName = "gesture six";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 6u:
-            gestureName = "gesture lh_right";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture seven";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 7u:
-            gestureName = "gesture nine";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture eight";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 8u:
-            gestureName = "gesture one";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture nine";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 9u:
-            gestureName = "gesture rh_left";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture fist";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 10u:
-            gestureName = "gesture rh_right";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture rh_left";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 11u:
-            gestureName = "gesture seven";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture rh_right";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 12u:
-            gestureName = "gesture six";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture lh_left";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 13u:
-            gestureName = "gesture three";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture lh_right";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 14u:
-            gestureName = "gesture two";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            gestureName = "gesture empty";
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         default:
             gestureName = "gesture others";
-            //UartSendRead(uartFd, InvalidGesture); // 无效值
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }
-    //SAMPLE_PRT("hand gesture success\n");
 }
+
 
 HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo *numInfoArg)
 {
@@ -269,7 +261,7 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
             SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "CnnCalU8c1Img FAIL, ret=%#x\n", ret);
             HI_ASSERT(resLen <= sizeof(numInfo) / sizeof(numInfo[0]));
-            //HandDetectFlagSample(numInfo[0]);
+            //HandDetectFlag(numInfo[0]);
             *numInfoArg = numInfo[0];
             MppFrmDestroy(&frmDst);
         }

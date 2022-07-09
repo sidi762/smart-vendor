@@ -38,12 +38,14 @@
 
 SlotInfo vendorData[NUMBER_OF_SLOTS] = {0};
 
+/*
 SlotInfo testVendorData;
 testVendorData.slot_num = 4;
 strcpy(testVendorData.product_name, "N95 Mask");
 strcpy(testVendorData.product_price_string, "10.50 Yuan");
 testVendorData.product_price = 10.5;
 testVendorData.remaining_num = 3;
+*/
 
 SlotInfo loadVendorDataFromFile()
 {
@@ -76,5 +78,6 @@ void fileInit()
         }
         saveVendorDataToFile(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])));
     }
+    printf("\n%s\n", vendorDataUpdateShadow(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])), 1));
 
 }

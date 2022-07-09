@@ -24,7 +24,9 @@
 extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
-HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo);
+
+static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo);
+HI_VOID* VendorGetVpssChnFrameAndClassify(HI_VOID* arg);
 
 #ifdef __cplusplus
 #if __cplusplus
