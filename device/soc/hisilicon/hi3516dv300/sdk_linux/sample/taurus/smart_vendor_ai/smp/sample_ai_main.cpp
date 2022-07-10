@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 HiSilicon (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2022 Sidi Liang.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,19 +20,19 @@
 #include "messaging.h"
 #include "data_store.h"
 
-/* function : show usage */
-static void SmartVendorUsage(char* pchPrgName)
+/* Display help info */
+static void SmartVendorHelp()
 {
-    printf("Usage : %s <index> \n", pchPrgName);
-    printf("index:\n");
-    printf("\t 0) cnn trash_classify(resnet18).\n");
-    printf("\t 1) hand classify(yolov2+resnet18).\n");
-    printf("\t 2) tennis detect(opencv).\n");
+    printf("\nSmart vending machine 3516-vision client \n");
+    printf("Version 1.0\n");
+    printf("Developed by:\n");
+    printf("\t Sidi Liang\n");
+    printf("Part of the Smart Vendor Project:\n");
+    printf("\t Sidi Liang, Yi Liu, Yicong Liu\n");
 }
 
 /*
- * function    : main()
- * Description : main
+ * Main Entry
  */
 int main(int argc, char *argv[])
 {
@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     sdk_init();
     /* MIPI is GPIO55, Turn on the backlight of the LCD screen */
     system("cd /sys/class/gpio/;echo 55 > export;echo out > gpio55/direction;echo 1 > gpio55/value");
+    SmartVendorHelp();
 
     fileInit();
 
@@ -52,6 +53,6 @@ int main(int argc, char *argv[])
 
 
     sdk_exit();
-    SAMPLE_PRT("\nsdk exit success\n");
+    SAMPLE_PRT("\n Program exited. Bye.\n");
     return s32Ret;
 }
