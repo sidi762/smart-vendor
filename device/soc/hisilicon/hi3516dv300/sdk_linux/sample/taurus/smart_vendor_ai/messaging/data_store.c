@@ -58,6 +58,7 @@ void saveVendorDataToFile(SlotInfo vendorData[], int len)
     FILE *fp = NULL;
     fp = fopen(CONFIG_FILE_PATH, "w+");
     fputs(jsonString, fp);
+    fclose(fp);
     return;
 }
 
