@@ -57,7 +57,7 @@ static IVE_IMAGE_S imgIn;
 static IVE_IMAGE_S imgDst;
 static VIDEO_FRAME_INFO_S frmIn;
 static VIDEO_FRAME_INFO_S frmDst;
-int uartFd = 0;
+
 HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
 {
     SAMPLE_SVP_NNIE_CFG_S *self = NULL;
@@ -114,88 +114,6 @@ static HI_S32 GetBiggestHandIndex(RectBox boxs[], int detectNum)
     return biggestBoxIndex;
 }
 
-static void HandDetectFlag(const RecogNumInfo resBuf)
-{
-    HI_CHAR *gestureName = NULL;
-    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
-    //SlotSelection selectedSlot;
-    switch (resBuf.num) {
-        case 0u:
-            gestureName = "gesture one";
-            //selectedSlot.slot_num = 1;
-            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 1u:
-            gestureName = "gesture two";
-            //selectedSlot.slot_num = 2;
-            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 2u:
-            gestureName = "gesture three";
-            //selectedSlot.slot_num = 3;
-            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 3u:
-            gestureName = "gesture four";
-            //selectedSlot.slot_num = 4;
-            //UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 4u:
-            gestureName = "gesture five";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 5u:
-            gestureName = "gesture six";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 6u:
-            gestureName = "gesture seven";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 7u:
-            gestureName = "gesture eight";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 8u:
-            gestureName = "gesture nine";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 9u:
-            gestureName = "gesture fist";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 10u:
-            gestureName = "gesture rh_left";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 11u:
-            gestureName = "gesture rh_right";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 12u:
-            gestureName = "gesture lh_left";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 13u:
-            gestureName = "gesture lh_right";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 14u:
-            gestureName = "gesture empty";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        default:
-            gestureName = "gesture others";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-    }
-}
-
-
 HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm, RecogNumInfo *numInfoArg)
 {
     SAMPLE_SVP_NNIE_CFG_S *self = (SAMPLE_SVP_NNIE_CFG_S*)model;
@@ -234,22 +152,15 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
 
         // Crop the image to classification network
         RectBox targetBox = cnnBoxs[biggestBoxIndex];
-        //if(targetBox.ymin > 50) targetBox.ymin -= 50;
-        //if(targetBox.ymax < 334) targetBox.ymin += 50;
-        //MppFrmDrawRects(dstFrm, targetBox, 1, RGB888_GREEN, DRAW_RETC_THICK); //
         ret = ImgYuvCrop(&img, &imgIn, &targetBox);
-        //SAMPLE_PRT("\nxmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax, targetBox.xmin, targetBox.ymax, targetBox.ymin);//Print this info to check what size of images are being cropped
-        SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
-        //Try if we don't crop gives better result: Doesn't seems to work
-        // RectBox verticalImageBox = cnnBoxs[biggestBoxIndex];
-        // int xcenter = (verticalImageBox.xmin + verticalImageBox.xmax) / 2;
-        // int ycenter = (verticalImageBox.ymin + verticalImageBox.ymax) / 2;
-        // verticalImageBox.xmin = xcenter - 108;
-        // verticalImageBox.xmax = xcenter + 108;
-        // verticalImageBox.ymin = ycenter - 192;
-        // verticalImageBox.ymax = ycenter + 192;
-        //ret = ImgYuvCrop(&img, &imgIn, &verticalImageBox);
+        //Print this info to check what size of images are being cropped
+        /*
+        SAMPLE_PRT("\nxmax: %d xmin: %d ymax: %d ymin: %d\n",targetBox.xmax,
+            targetBox.xmin, targetBox.ymax, targetBox.ymin);
+        */
+
+        SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
         if ((imgIn.u32Width >= WIDTH_LIMIT) && (imgIn.u32Height >= HEIGHT_LIMIT)) {
             COMPRESS_MODE_E enCompressMode = srcFrm->stVFrame.enCompressMode;
@@ -261,7 +172,6 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
             SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "CnnCalU8c1Img FAIL, ret=%#x\n", ret);
             HI_ASSERT(resLen <= sizeof(numInfo) / sizeof(numInfo[0]));
-            //HandDetectFlag(numInfo[0]);
             *numInfoArg = numInfo[0];
             MppFrmDestroy(&frmDst);
         }

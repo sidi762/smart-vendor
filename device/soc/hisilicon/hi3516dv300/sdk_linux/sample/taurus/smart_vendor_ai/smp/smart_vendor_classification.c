@@ -230,18 +230,21 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
         int retResult = 0;
         int lastResult = 5000;//initial value
         for(int i = 0; i < 5; i += 1){
-            ret = HI_MPI_VPSS_GetChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm, s32MilliSec);
+            ret = HI_MPI_VPSS_GetChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0,
+                &frm, s32MilliSec);
             if (ret != 0) {
                 SAMPLE_PRT("HI_MPI_VPSS_GetChnFrame FAIL, err=%#x, grp=%d, chn=%d\n",
                     ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
-                ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm);
+                ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp,
+                    g_aicMediaInfo->vpssChn0, &frm);
                 if (ret != HI_SUCCESS) {
-                    SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
+                    SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed, grp(%d) chn(%d)!\n",
                         ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
                 }
                 continue;
             }
-            SAMPLE_PRT("get vpss frame success, weight:%d, height:%d\n", frm.stVFrame.u32Width, frm.stVFrame.u32Height);
+            SAMPLE_PRT("get vpss frame success, weight:%d, height:%d\n", frm.stVFrame.u32Width,
+                frm.stVFrame.u32Height);
 
             VendorHandClassificationProcess(frm, voLayer, voChn, g_workPlug, g_aicMediaInfo);
 
@@ -258,6 +261,7 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
                 lastResult = retResult;
             }
         }
+        
         SlotSelection selectedSlot;
         selectedSlot.slot_num = retResult;
         UARTSendResult(selectedSlot); //Send result to 3861 via UART
