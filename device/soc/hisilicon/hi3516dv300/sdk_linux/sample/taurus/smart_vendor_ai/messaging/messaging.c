@@ -28,6 +28,30 @@
 #include "messaging.h"
 #include "json_helper.h"
 
+/* message receive */
+int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
+{
+    int i = 0, readLen = 0;
+    unsigned int RecvLen = len;
+
+    /* Hi3516dv300 uart read */
+    readLen = UartRead(fd, buf, RecvLen, 1000); /* 1000 :time out */
+    if (readLen <= 0) {
+        printf("uart_read data failed\r\n");
+        return 0;
+    }
+    printf("read_len=%d\r\n", readLen);
+
+    /* 输出收到的数据 */
+    for (i = 0; i < RecvLen; i++) {
+        printf("0x%x ", buf[i]);
+    }
+    printf("\r\n");
+
+    return 1;
+}
+
+
 void messageUARTSendData(int fd, char *payload)
 {
     int lengthInt = 0;
