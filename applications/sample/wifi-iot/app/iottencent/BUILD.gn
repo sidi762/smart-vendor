@@ -11,9 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("beepDemo") {
+static_library("AppDemoIot") {
   sources = [
-    "app_demo_beep_control.c",
+    "app_demo_iot.c",
+    "cjson_init.c",
+    "iot_hmac.c",
+    "iot_log.c",
+    "iot_main.c",
+    "iot_profile.c",
+    "iot_sta.c",
     "hal_iot_gpio_ex.c",
   ]
 
@@ -22,5 +28,13 @@ static_library("beepDemo") {
     "//utils/native/lite/include",
     "//kernel/liteos_m/kal/cmsis",
     "//base/iot_hardware/peripheral/interfaces/kits",
+    "//device/soc/hisilicon/hi3861v100/sdk_liteos/third_party/lwip_sack/include/lwip",
+    "//third_party/cJSON",
+    "//device/soc/hisilicon/hi3861v100/sdk_liteos/third_party/mbedtls/include/mbedtls",
+    "//foundation/communication/wifi_lite/interfaces/wifiservice",
+    "//device/soc/hisilicon/hi3861v100/sdk_liteos/third_party/paho.mqtt.c/include/mqtt",
+    "//device/soc/hisilicon/hi3861v100/sdk_liteos/third_party/libcoap/include/coap2",
   ]
+
+  defines = [ "WITH_LWIP" ]
 }

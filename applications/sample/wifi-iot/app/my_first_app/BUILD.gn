@@ -1,8 +1,0 @@
-static_library("myappFuck") {
-    sources = [
-        "hello_world.c"
-    ]
-    include_dirs = [
-        "//utils/native/lite/include"
-    ]
-}

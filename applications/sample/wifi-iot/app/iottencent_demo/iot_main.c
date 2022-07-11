@@ -81,7 +81,8 @@ static const char *gDefaultSubscribeTopic[] = {
     "YT32IOSCAL/Hi38611_mqtt/control",
 };
 
-#define CN_TOPIC_SUBSCRIBE_NUM     (sizeof(gDefaultSubscribeTopic) / sizeof(const char *))
+//#define CN_TOPIC_SUBSCRIBE_NUM     (sizeof(gDefaultSubscribeTopic) / sizeof(const char *))
+#define CN_TOPIC_SUBSCRIBE_NUM    3
 static int MsgRcvCallBack(char *context, char *topic, int topicLen, MQTTClient_message *message)
 {
     IoTMsg_t  *msg;

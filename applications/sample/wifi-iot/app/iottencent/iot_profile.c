@@ -311,7 +311,7 @@ static char *MakeProfileReport(WeChatProfile *payload)
 }
 
 #define CN_PROFILE_TOPICFMT_TOPIC            "YT32IOSCAL/Hi38611_mqtt/data"
-/*int IoTProfilePropertyReport(char *deviceID, WeChatProfile *payload)
+int IoTProfilePropertyReport(char *deviceID, WeChatProfile *payload)
 {
     int ret = -1;
     char *topic;
@@ -331,31 +331,6 @@ static char *MakeProfileReport(WeChatProfile *payload)
 
     hi_free(0, topic);
     cJSON_free(msg);
-
-    return ret;
-}*/
-
-int IoTProfilePropertyReport_uart(char *deviceID, char *msg)
-{
-    int ret = -1;
-    char *topic;
-    //char *msg;
-
-    if ((deviceID == NULL) || (msg == NULL)) {
-        return ret;
-    }
-    topic = MakeTopic(CN_PROFILE_TOPICFMT_TOPIC, deviceID, NULL);
-    if (topic == NULL) {
-        return;
-    }
-    //msg = MakeProfileReport(payload);
-    if ((topic != NULL) && (msg != NULL)) {
-        ret = IotSendMsg(0, topic, msg);
-        printf("send success\n");
-    }
-
-    hi_free(0, topic);
-    //cJSON_free(msg);
 
     return ret;
 }

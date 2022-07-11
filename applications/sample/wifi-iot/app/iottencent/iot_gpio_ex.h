@@ -392,7 +392,7 @@ unsigned int IoSetPull(unsigned int id, IotIoPull val);
 
 unsigned int IoSetFunc(unsigned int id, unsigned char val);
 
-unsigned int TaskMsleep(unsigned int ms);
+//unsigned int TaskMsleep(unsigned int ms);
 
 #endif
 /** @} */

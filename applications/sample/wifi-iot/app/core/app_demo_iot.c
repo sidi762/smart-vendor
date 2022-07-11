@@ -41,14 +41,15 @@
 #define TWO_SECOND                          (2000)
 /* oc request id */
 #define CN_COMMADN_INDEX                    "commands/request_id="
-#define WECHAT_SUBSCRIBE_control            "chosen_slot"
+#define WECHAT_SUBSCRIBE_control            "slot_num"
 #define WECHAT_SUBSCRIBE_channel1           "slot_1"
 #define WECHAT_SUBSCRIBE_channel2           "slot_2"
 #define WECHAT_SUBSCRIBE_channel3           "slot_3"
-#define WECHAT_SUBSCRIBE_channel4           "slot_4"
+#define WECHAT_SUBSCRIBE_channel4           "4"
 #define topic_data                          "YT32IOSCAL/Hi38611_mqtt/data"
 #define topic_event                         "YT32IOSCAL/Hi38611_mqtt/event"
 #define topic_control                       "YT32IOSCAL/Hi38611_mqtt/control"
+#define human_detect_io                     7
 
 int g_ligthStatus = -1;
 int control_success = 0;
@@ -100,24 +101,24 @@ static void engine_control(unsigned int IO){
     IoSetFunc(IO, 0);
     IoTGpioSetDir(IO, IOT_GPIO_DIR_OUT);
     IoTGpioSetOutputVal(IO, IOT_GPIO_VALUE1);
-    IOT_LOG_DEBUG("Engine at GPIO:%u started!", IO);
+    IOT_LOG_DEBUG("Engine at GPIO:%u started!\n", IO);
     hi_udelay(20000);
     IoTGpioSetOutputVal(IO, IOT_GPIO_VALUE0);
-    IOT_LOG_DEBUG("Engine at GPIO:%u stopped!", IO);
+    IOT_LOG_DEBUG("Engine at GPIO:%u stopped!\n", IO);
 }
 
 static void engine_start(unsigned int IO){
     IoSetFunc(IO, 0);
     IoTGpioSetDir(IO, IOT_GPIO_DIR_OUT);
     IoTGpioSetOutputVal(IO, IOT_GPIO_VALUE1);
-    IOT_LOG_DEBUG("Engine at GPIO:%u started!", IO);
+    IOT_LOG_DEBUG("Engine at GPIO:%u started!\n", IO);
 }
 
 static void engine_stop(unsigned int IO){
     IoSetFunc(IO, 0);
     IoTGpioSetDir(IO, IOT_GPIO_DIR_OUT);
     IoTGpioSetOutputVal(IO, IOT_GPIO_VALUE0);
-    IOT_LOG_DEBUG("Engine at GPIO:%u stopped!", IO);
+    IOT_LOG_DEBUG("Engine at GPIO:%u stopped!\n", IO);
 }
 
 static void engine_reinit(unsigned int IO){
@@ -125,7 +126,7 @@ static void engine_reinit(unsigned int IO){
     IoSetFunc(IO, 0);
     IoTGpioSetDir(IO, IOT_GPIO_DIR_OUT);
     IoTGpioSetOutputVal(IO, IOT_GPIO_VALUE0);
-    IOT_LOG_DEBUG("Engine at GPIO:%u initialized!", IO);
+    IOT_LOG_DEBUG("Engine at GPIO:%u initialized!\n", IO);
 }
 
 static void all_engine_reinit(){
@@ -133,7 +134,14 @@ static void all_engine_reinit(){
     engine_reinit(7);
     engine_reinit(9);
     engine_reinit(10);
-    IOT_LOG_DEBUG("All engines initialized!");
+    IOT_LOG_DEBUG("All engines initialized!\n");
+}
+
+static void Sensor_init(){
+    IoTGpioInit(human_detect_io);
+    IoSetFunc(human_detect_io, 0);
+    IoTGpioSetDir(human_detect_io, IOT_GPIO_DIR_IN);
+    IOT_LOG_DEBUG("Sensor initialized!\n");
 }
 
 static int  DeviceMsgCallback(FnMsgCallBack msgCallBack)
@@ -314,56 +322,64 @@ static hi_void *UartDemoTask(char *param)
     char *recBuff = NULL;
     int feedback = 0;
     unsigned char *control_flag = "success";
+    IotGpioValue value = IOT_GPIO_VALUE0;
 
     hi_unref_param(param);
     printf("Initialize uart demo successfully, please enter some datas via DEMO_UART_NUM port...\n");
     Uart1GpioCOnfig();
-    /*WifiStaReadyWait();
-    cJsonInit();
-    IoTMain();*/
-    for (;;) {
-        uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
-        if ((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55)) {
-            if (GetUartConfig(UART_RECEIVE_FLAG) == HI_FALSE) {
-                (void)memcpy_s(uartDefConfig.g_receiveUartBuff, uartDefConfig.g_uartLen,
-                    uartBuff, uartDefConfig.g_uartLen);/*uartBuff中的信息放到uartDefConfig.g_receiveUartBuff*/
-                (void)SetUartRecvFlag(UART_RECV_TRUE);
-            }
-        }
-        //printf("len:%d\n",  uartDefConfig.g_uartLen);
-        recBuff = (char*)malloc(uartDefConfig.g_uartLen-3);
+    Sensor_init();
+    IoTGpioGetInputVal(human_detect_io, &value);
+    value = IOT_GPIO_VALUE1;
+    
+    for (;;) 
+    {
 
-        for (int i = 0; i<uartDefConfig.g_uartLen; i++)
+        if(value == IOT_GPIO_VALUE1)
         {
-            if(i <= 2)
-            {
-                printf("0x%x ", uartBuff[i]);
+            uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
+            if ((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55)) {
+
+                if (GetUartConfig(UART_RECEIVE_FLAG) == HI_FALSE) {
+                    (void)memcpy_s(uartDefConfig.g_receiveUartBuff, uartDefConfig.g_uartLen,
+                        uartBuff, uartDefConfig.g_uartLen);/*uartBuff中的信息放到uartDefConfig.g_receiveUartBuff*/
+                    (void)SetUartRecvFlag(UART_RECV_TRUE);
+                }
             }
-            else
+            printf("UART start\n");
+            printf("len:%d\n",  uartDefConfig.g_uartLen);
+            recBuff = (char*)malloc(uartDefConfig.g_uartLen-3);
+
+            for (int i = 0; i<uartDefConfig.g_uartLen; i++)
             {
-                printf("%c ", uartBuff[i]);
-                recBuff[i-3] = uartBuff[i];
+                if(i <= 2)
+                {
+                    printf("0x%x ", uartBuff[i]);
+                }
+                else
+                {
+                    printf("%c ", uartBuff[i]);
+                    recBuff[i-3] = uartBuff[i];
+                }
+
             }
 
-            
-        }
+            //TaskMsleep(20); /* 20:sleep 20ms */
 
-        //TaskMsleep(20); /* 20:sleep 20ms */
-
-        /*send to cloud*/
+            /*send to cloud*/
        
-        IoTProfilePropertyReport_uart(CONFIG_USER_ID, recBuff);
-        printf("communicatuon completed\n");
-        free(recBuff);
-        TaskMsleep(5000);
-        IoTSetMsgCallback(DemoMsgRcvCallBack);
-        if (control_success == 1)
-       {
-        feedback = IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
-        printf("feedback: %d\n", feedback);
-        control_success = 0;
-       }
+            IoTProfilePropertyReport_uart(CONFIG_USER_ID, recBuff);
+            //printf("communicatuon completed\n");
+            free(recBuff);
+            TaskMsleep(50);
+            IoTSetMsgCallback(DemoMsgRcvCallBack);
+            if (control_success == 1)
+            {
+             feedback = IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
+             printf("feedback: %d\n", feedback);
+             control_success = 0;
+            }
         
+        }
     }
     return HI_NULL;
 }

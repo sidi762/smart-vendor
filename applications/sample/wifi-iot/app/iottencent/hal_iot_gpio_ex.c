@@ -37,10 +37,10 @@ unsigned int IoSetFunc(unsigned int id, unsigned char val)
     return hi_io_set_func((hi_io_name)id, val);
 }
 
-unsigned int TaskMsleep(unsigned int ms)
+/*unsigned int TaskMsleep(unsigned int ms)
 {
     if (ms <= 0) {
         return IOT_FAILURE;
     }
     return hi_sleep((hi_u32)ms);
-}
+}*/

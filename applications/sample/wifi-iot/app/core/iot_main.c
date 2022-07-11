@@ -53,6 +53,7 @@
 #define CN_TASK_PRIOR 28
 #define CN_TASK_STACKSIZE 0X2000
 #define CN_TASK_NAME "IoTMain"
+#define Signal_LED_IO 12
 
 typedef enum {
     EN_IOT_MSG_PUBLISH = 0,
@@ -234,6 +235,7 @@ static void MainEntryProcess(void)
         }
     }
     IOT_LOG_DEBUG ("Connect success and Subscribe success\r\n");
+    IoTGpioSetOutputVal(Signal_LED_IO, IOT_GPIO_VALUE1);
     while (MQTTClient_isConnected(client)) {
         ProcessQueueMsg(client); // < do the job here
         MQTTClient_yield();  // < make the keepalive done
@@ -249,6 +251,7 @@ static hi_void *MainEntry(char *arg)
     while (gIoTAppCb.stop == false) {
         MainEntryProcess();
         IOT_LOG_DEBUG("The connection lost and we will try another connect\r\n");
+        IoTGpioSetOutputVal(Signal_LED_IO, IOT_GPIO_VALUE0);
         hi_sleep(1000); /* 1000: cpu sleep 1000ms */
     }
     return NULL;
@@ -268,6 +271,11 @@ int IoTMain(void)
     engine_init(7);
     engine_init(9);
     engine_init(10);
+    IoTGpioInit(Signal_LED_IO);
+    IoSetFunc(Signal_LED_IO, 0);
+    IoTGpioSetDir(Signal_LED_IO, IOT_GPIO_DIR_OUT);
+    IoTGpioSetOutputVal(Signal_LED_IO, IOT_GPIO_VALUE0);
+
     gIoTAppCb.queueID = osMessageQueueNew(CN_QUEUE_MSGNUM, CN_QUEUE_MSGSIZE, NULL);
     if (ret != IOT_SUCCESS) {
         IOT_LOG_ERROR("Create the msg queue Failed\r\n");

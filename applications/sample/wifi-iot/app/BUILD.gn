@@ -14,5 +14,5 @@
 import("//build/lite/config/component/lite_component.gni")
 
 lite_component("app") {
-  features = [ "engine_control:control", ]
+  features = [ "cloud_to_uart:cloud_uart", ]
 }

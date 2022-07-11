@@ -310,7 +310,7 @@ static char *MakeProfileReport(WeChatProfile *payload)
     return ret;
 }
 
-#define CN_PROFILE_TOPICFMT_TOPIC            "$shadow/operation/YT32IOSCAL/Hi38611_mqtt"
+#define CN_PROFILE_TOPICFMT_TOPIC            "$shadow/operation/19VUBHD786/mqtt"
 int IoTProfilePropertyReport(char *deviceID, WeChatProfile *payload)
 {
     int ret = -1;

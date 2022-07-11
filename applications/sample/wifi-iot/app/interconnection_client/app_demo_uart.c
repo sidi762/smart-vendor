@@ -20,60 +20,11 @@
 #include <iot_uart.h>
 #include <hi_gpio.h>
 #include <hi_io.h>
-#include <hi_task.h>
-#include <string.h>
-#include <hi_wifi_api.h>
-#include <hi_mux.h>
 #include "iot_gpio_ex.h"
 #include "ohos_init.h"
 #include "cmsis_os2.h"
-#include "iot_config.h"
-#include "iot_log.h"
-#include "iot_main.h"
-#include "iot_profile.h"
-#include "iot_gpio.h"
-
-/* attribute initiative to report */
-#define TAKE_THE_INITIATIVE_TO_REPORT
-#define TWO_SECOND                          (2000)
-/* oc request id */
-#define CN_COMMADN_INDEX                    "commands/request_id="
-#define WECHAT_SUBSCRIBE_control            "chosen_slot"
-#define WECHAT_SUBSCRIBE_channel1           "slot_1"
-#define WECHAT_SUBSCRIBE_channel2           "slot_2"
-#define WECHAT_SUBSCRIBE_channel3           "slot_3"
-#define WECHAT_SUBSCRIBE_channel4           "slot_4"
-#define topic_data                          "YT32IOSCAL/Hi38611_mqtt/data"
-#define topic_event                         "YT32IOSCAL/Hi38611_mqtt/event"
-#define topic_control                       "YT32IOSCAL/Hi38611_mqtt/control"
-#define CN_PROFILE_TOPICFMT_TOPIC            "$shadow/operation/YT32IOSCAL/Hi38611_mqtt"
-
 
 UartDefConfig uartDefConfig = {0};
-
-/*int IoTProfilePropertyReport_uart(char *deviceID, char *msg)
-{
-    int ret = -1;
-    char *topic;
-    //char *msg;
-
-    if ((deviceID == NULL) || (msg == NULL)) {
-        return ret;
-    }
-    topic = MakeTopic(CN_PROFILE_TOPICFMT_TOPIC, deviceID, NULL);
-    if (topic == NULL) {
-        return;
-    }
-    //msg = MakeProfileReport(payload);
-    if ((topic != NULL) && (msg != NULL)) {
-        ret = IotSendMsg(0, topic, msg);
-    }
-
-    hi_free(0, topic);
-    //cJSON_free(msg);
-
-    return ret;
-}*/
 
 static void Uart1GpioCOnfig(void)
 {
@@ -129,14 +80,9 @@ unsigned char *GetUartReceiveMsg(void)
 static hi_void *UartDemoTask(char *param)
 {
     hi_u8 uartBuff[UART_BUFF_SIZE] = {0};
-    char *recBuff;
-
     hi_unref_param(param);
     printf("Initialize uart demo successfully, please enter some datas via DEMO_UART_NUM port...\n");
     Uart1GpioCOnfig();
-    WifiStaReadyWait();
-    cJsonInit();
-    IoTMain();
     for (;;) {
         uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
         if ((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55)) {
@@ -147,7 +93,6 @@ static hi_void *UartDemoTask(char *param)
             }
         }
         printf("len:%d\n",  uartDefConfig.g_uartLen);
-        recBuff = (char*)malloc(uartDefConfig.g_uartLen-3);
 
         for (int i = 0; i<uartDefConfig.g_uartLen; i++)
         {
@@ -158,21 +103,12 @@ static hi_void *UartDemoTask(char *param)
             else
             {
                 printf("%c ", uartBuff[i]);
-                recBuff[i-3] = uartBuff[i];
             }
 
             
         }
 
-        //TaskMsleep(20); /* 20:sleep 20ms */
-
-        /*send to cloud*/
-       
-        IoTProfilePropertyReport_uart(CONFIG_USER_ID, recBuff);
-
-        free(recBuff);
-
-        TaskMsleep(10);
+        TaskMsleep(20); /* 20:sleep 20ms */
     }
     return HI_NULL;
 }
@@ -198,11 +134,7 @@ hi_void UartTransmit(hi_void)
     }
     /* Create a task to handle uart communication */
     osThreadAttr_t attr = {0};
-    attr.attr_bits = 0U;
-    attr.cb_mem = NULL;
-    attr.cb_size = 0U;
-    attr.stack_mem = NULL;
-    attr.stack_size = 8096;
+    attr.stack_size = UART_DEMO_TASK_STAK_SIZE;
     attr.priority = UART_DEMO_TASK_PRIORITY;
     attr.name = (hi_char*)"uart demo";
     if (osThreadNew((osThreadFunc_t)UartDemoTask, NULL, &attr) == NULL) {

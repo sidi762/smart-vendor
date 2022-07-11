@@ -11,10 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("control") {
+static_library("interconnectionClient") {
   sources = [
-    "steering_engine_control.c",
+    "app_demo_uart.c",
     "hal_iot_gpio_ex.c",
+    "hisignalling_protocol.c",
   ]
 
   include_dirs = [

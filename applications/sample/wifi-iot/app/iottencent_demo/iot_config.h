@@ -22,10 +22,10 @@
 
 // < CONFIG THE WIFI
 /* Please modify the ssid and pwd for the own */
-#define CONFIG_AP_SSID  "Mi10" // WIFI SSID
-#define CONFIG_AP_PWD   "81389971" // WIFI PWD
+#define CONFIG_AP_SSID  "Sidi_iPhone" // WIFI SSID
+#define CONFIG_AP_PWD   "12345678" // WIFI PWD
 /* Tencent iot Cloud user ID , password */
-#define CONFIG_USER_ID    "YT32IOSCALHi38611_mqtt;12010126;6482d;1661529600"
-#define CONFIG_USER_PWD   "bf55de077b7e4bb95e1bb4954109aa4b9715be9fcb0f0a7ac5c740f8a73fdb8c;hmacsha256"
+#define CONFIG_USER_ID    "YT32IOSCALHi38611_mqtt;12010126;41883;1663689600"
+#define CONFIG_USER_PWD   "b4168d5d4b65898e6984346c81ad13e1b3f112ab7ce46f65cf29455f4c9e18e8;hmacsha256"
 #define CN_CLIENTID     "YT32IOSCALHi38611_mqtt" // Tencent cloud ClientID format: Product ID + device name
 #endif
