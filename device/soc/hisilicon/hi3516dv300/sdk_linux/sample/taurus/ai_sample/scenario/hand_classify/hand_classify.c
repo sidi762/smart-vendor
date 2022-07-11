@@ -42,7 +42,7 @@ extern "C" {
 #define HEIGHT_LIMIT       32
 #define IMAGE_WIDTH        224  // The resolution of the model IMAGE sent to the classification is 224*224
 #define IMAGE_HEIGHT       224
-#define MODEL_FILE_GESTURE    "/userdata/models/hand_classify/hand_gesture.wk" // darknet framework wk model
+#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification.wk" // darknet framework wk model
 
 static int biggestBoxIndex;
 static IVE_IMAGE_S img;
@@ -65,7 +65,7 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
     ret = CnnCreate(&self, MODEL_FILE_GESTURE);
     *model = ret < 0 ? 0 : (uintptr_t)self;
     HandDetectInit(); // Initialize the hand detection model
-    SAMPLE_PRT("Load hand detect claasify model success\n");
+    //SAMPLE_PRT("Load hand detect claasify model success\n");
     /* uart open init */
     uartFd = UartOpenInit();
     if (uartFd < 0) {
@@ -80,7 +80,7 @@ HI_S32 Yolo2HandDetectResnetClassifyUnload(uintptr_t model)
 {
     CnnDestroy((SAMPLE_SVP_NNIE_CFG_S*)model);
     HandDetectExit(); // Uninitialize the hand detection model
-    SAMPLE_PRT("Unload hand detect claasify model success\n");
+    //SAMPLE_PRT("Unload hand detect claasify model success\n");
 
     return 0;
 }
@@ -117,14 +117,15 @@ static HI_S32 GetBiggestHandIndex(RectBox boxs[], int detectNum)
 static void HandDetectFlag(const RecogNumInfo resBuf)
 {
     HI_CHAR *gestureName = NULL;
+    SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
     switch (resBuf.num) {
         case 0u:
-            gestureName = "gesture fist";
+            gestureName = "gesture empty";
             UartSendRead(uartFd, FistGesture); // 拳头手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         case 1u:
-            gestureName = "gesture indexUp";
+            gestureName = "gesture fist";
             UartSendRead(uartFd, ForefingerGesture); // 食指手势
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
@@ -150,16 +151,16 @@ static void HandDetectFlag(const RecogNumInfo resBuf)
             break;
         case 6u:
             gestureName = "gesture phoneCall";
-            UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
+            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
         default:
             gestureName = "gesture others";
-            UartSendRead(uartFd, InvalidGesture); // 无效值
+            //UartSendRead(uartFd, InvalidGesture); // 无效值
             SAMPLE_PRT("----gesture name----:%s\n", gestureName);
             break;
     }
-    SAMPLE_PRT("hand gesture success\n");
+    //SAMPLE_PRT("hand gesture success\n");
 }
 
 HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *srcFrm, VIDEO_FRAME_INFO_S *dstFrm)
@@ -179,11 +180,11 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
         RectBox *box = &objs[i].box;
         RectBoxTran(box, HAND_FRM_WIDTH, HAND_FRM_HEIGHT,
             dstFrm->stVFrame.u32Width, dstFrm->stVFrame.u32Height);
-        SAMPLE_PRT("yolo2_out: {%d, %d, %d, %d}\n", box->xmin, box->ymin, box->xmax, box->ymax);
+        //SAMPLE_PRT("yolo2_out: {%d, %d, %d, %d}\n", box->xmin, box->ymin, box->xmax, box->ymax);
         boxs[i] = *box;
     }
     biggestBoxIndex = GetBiggestHandIndex(boxs, objNum);
-    SAMPLE_PRT("biggestBoxIndex:%d, objNum:%d\n", biggestBoxIndex, objNum);
+    //SAMPLE_PRT("biggestBoxIndex:%d, objNum:%d\n", biggestBoxIndex, objNum);
 
     // When an object is detected, a rectangle is drawn in the DSTFRM
     if (biggestBoxIndex >= 0) {
@@ -200,13 +201,24 @@ HI_S32 Yolo2HandDetectResnetClassifyCal(uintptr_t model, VIDEO_FRAME_INFO_S *src
 
         // Crop the image to classification network
         ret = ImgYuvCrop(&img, &imgIn, &cnnBoxs[biggestBoxIndex]);
+        //Try if we don't crop gives better result: Doesn't seems to work
+        // RectBox verticalImageBox = cnnBoxs[biggestBoxIndex];
+        // int xcenter = (verticalImageBox.xmin + verticalImageBox.xmax) / 2;
+        // int ycenter = (verticalImageBox.ymin + verticalImageBox.ymax) / 2;
+        // verticalImageBox.xmin = xcenter - 108;
+        // verticalImageBox.xmax = xcenter + 108;
+        // verticalImageBox.ymin = ycenter - 192;
+        // verticalImageBox.ymax = ycenter + 192;
+
+        //ret = ImgYuvCrop(&img, &imgIn, &verticalImageBox);
+
         SAMPLE_CHECK_EXPR_RET(ret < 0, ret, "ImgYuvCrop FAIL, ret=%#x\n", ret);
 
         if ((imgIn.u32Width >= WIDTH_LIMIT) && (imgIn.u32Height >= HEIGHT_LIMIT)) {
             COMPRESS_MODE_E enCompressMode = srcFrm->stVFrame.enCompressMode;
             ret = OrigImgToFrm(&imgIn, &frmIn);
             frmIn.stVFrame.enCompressMode = enCompressMode;
-            SAMPLE_PRT("crop u32Width = %d, img.u32Height = %d\n", imgIn.u32Width, imgIn.u32Height);
+            //SAMPLE_PRT("crop u32Width = %d, img.u32Height = %d\n", imgIn.u32Width, imgIn.u32Height);
             ret = MppFrmResize(&frmIn, &frmDst, IMAGE_WIDTH, IMAGE_HEIGHT);
             ret = FrmToOrigImg(&frmDst, &imgDst);
             ret = CnnCalU8c1Img(self,  &imgDst, numInfo, sizeof(numInfo) / sizeof((numInfo)[0]), &resLen);
