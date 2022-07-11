@@ -54,6 +54,7 @@ void UARTSendResult(SlotSelection selectedSlot)
 
     #endif
 }
+
 /*----------------------------------------------------------------
 @brief Send the UI control message to 3618 via UART
 @param int fd: UART file descriptor
@@ -77,62 +78,6 @@ void UARTSendUIControl(UIControl UIController)
     printf("UIController sent\r\n");
 
     #endif
-}
-
-/* hand gesture recognition info */
-static void HandDetectFlagSample(const RecogNumInfo resBuf)
-{
-    HI_CHAR *gestureName = NULL;
-    //SAMPLE_PRT("resBuf.num: %u\n",resBuf.num);
-
-    SlotSelection selectedSlot;
-
-    switch (resBuf.num) {
-        case 0u:
-            gestureName = "gesture fist";
-
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 1u:
-            gestureName = "gesture indexUp";
-            selectedSlot.slot_num = 2;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 2u:
-            gestureName = "gesture OK";
-            selectedSlot.slot_num = 3;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 3u:
-            gestureName = "gesture palm";
-            selectedSlot.slot_num = 4;
-            UARTSendResult(selectedSlot); //Send result to 3861 via UART
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 4u:
-            gestureName = "gesture yes";
-            //UartSendRead(uartFd, YesGesture); // yes手势
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 5u:
-            gestureName = "gesture pinchOpen";
-            //UartSendRead(uartFd, ForefingerAndThumbGesture); // 食指 + 大拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        case 6u:
-            gestureName = "gesture phoneCall";
-            //UartSendRead(uartFd, LittleFingerAndThumbGesture); // 大拇指 + 小拇指
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-        default:
-            gestureName = "gesture others";
-            SAMPLE_PRT("----gesture name----:%s\n", gestureName);
-            break;
-    }
-    //g_bAiProcessStopSignal = HI_TRUE;
-    //SAMPLE_PRT("hand gesture success\n");
 }
 
 /* hand gesture recognition info */
@@ -217,7 +162,8 @@ int cmpfunc (const void * a, const void * b) {
     return ( *(int*)a - *(int*)b );
 }
 
-static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer, VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
+static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER voLayer,
+    VO_CHN voChn, AiPlugLib* g_workPlug, AicMediaInfo* g_aicMediaInfo)
 {
     int ret;
     if (GetCfgBool("hand_classify_switch:support_hand_classify", true)) {
@@ -236,38 +182,9 @@ static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER 
         g_numInfo.num = 1000;
         g_numInfo.score = 1000;//Use 1000 to denote the case of no hand
 
-        /*
-        RecogNumInfo hundredResults[100];
-        unsigned int hundredResultsNum[100];
-
-        for(int i = 0; i < 100; i++){
-            ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
-            hundredResults[i] = numInfo[0];
-            hundredResultsNum[i] = numInfo[0].num;
-        }
-        int recogResultOccurences[15];
-        int maxResultOccurence = 0;
-        int maxOccuredResultNum = 0;
-        qsort(hundredResultsNum, 100, sizeof(int), cmpfunc);
-        int resultCounter = 0;
-        for(int i = 1; i < 100; i++){
-            if(hundredResultsNum[i] != hundredResultsNum[i - 1]){
-                if(resultCounter <= maxResultOccurence){
-                    maxResultOccurence = resultCounter;
-                    maxOccuredResultNum = i;
-                }
-                resultCounter = 0;
-            }else{
-                resultCounter++;
-            }
-        }
-        HandDetectFlagSample(hundredResults[maxOccuredResultNum]);
-        */
-
-
-
-        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm, &frm, &g_numInfo); //Get result from model, returns the return value of CnnCalU8c1Img()
-        //HandDetectFlagSample(numInfo);
+        //Get result from model, returns the return value of CnnCalU8c1Img()
+        ret = Yolo2HandDetectResnetClassifyCal(g_workPlug->model, &resizeFrm,
+            &frm, &g_numInfo);
 
         //system("cat /proc/umap/vi");
 
@@ -283,9 +200,10 @@ static HI_VOID VendorHandClassificationProcess(VIDEO_FRAME_INFO_S frm, VO_LAYER 
     }
 
     HAND_RELEASE:
-        ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0, &frm);
+        ret = HI_MPI_VPSS_ReleaseChnFrame(g_aicMediaInfo->vpssGrp,
+            g_aicMediaInfo->vpssChn0, &frm);
         if (ret != HI_SUCCESS) {
-            SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed,Grp(%d) chn(%d)!\n",
+            SAMPLE_PRT("Error(%#x),HI_MPI_VPSS_ReleaseChnFrame failed, Grp(%d) chn(%d)!\n",
                 ret, g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
         }
 
