@@ -51,7 +51,7 @@ executable("smart_vendor_main") {
     "mpp_help/src/vgs_img.c",
     "scenario/hand_classify/hand_classify.c",
     "scenario/hand_classify/yolov2_hand_detect.c",
-    "smp/sample_ai_main.cpp",
+    "smp/vendor_main.cpp",
     "smp/sample_media_ai.c",
     "smp/smart_vendor_classification.c",
     "cjson/cJSON.c",
@@ -80,7 +80,6 @@ executable("smart_vendor_main") {
     "ext_util",
     "dependency",
     "third_party/src/iniparser/src",
-    #"third_party/output/opencv/include/opencv4",
     "//third_party/bounds_checking_function/include",
     "interconnection_server",
   ]
