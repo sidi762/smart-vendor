@@ -225,8 +225,13 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
     VO_CHN voChn = 0;
 
     SAMPLE_PRT("vpssGrp:%d, vpssChn0:%d\n", g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
-
+    int timeoutCount = 0;
     while (HI_FALSE == g_bAiProcessStopSignal) {
+        if(timeoutCount < 100000){
+            g_bAiProcessStopSignal = HI_TRUE;
+            SAMPLE_PRT("Timeout!\n");
+            break;
+        }
         int retResult = 0;
         int lastResult = 5000;//initial value
         for(int i = 0; i < 5; i += 1){
@@ -252,8 +257,9 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
                 lastResult = HandDetectFlag(g_numInfo);
 
             retResult = HandDetectFlag(g_numInfo);
-            if(!retResult || retResult == 15){//No hand
+            if(!retResult || retResult == 14){//No hand
                 i = 0;
+                timeoutCount += 1;
                 continue;
             }
             if(retResult != lastResult){
@@ -261,7 +267,7 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
                 lastResult = retResult;
             }
         }
-        
+
         SlotSelection selectedSlot;
         selectedSlot.slot_num = retResult;
         UARTSendResult(selectedSlot); //Send result to 3861 via UART

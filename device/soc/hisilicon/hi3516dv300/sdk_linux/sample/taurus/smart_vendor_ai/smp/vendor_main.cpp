@@ -71,8 +71,8 @@ int main(int argc, char *argv[])
         waitForStartSignal();
         //Stage 2
         SMART_VENDOR_HAND_CLASSIFY();
-        SAMPLE_PRT("\nHand classification ended, press enter to restart!\n");
-        (void)getchar();
+        SAMPLE_PRT("\nHand classification ended, restarting!\n");
+        //(void)getchar();
     }
 
 
