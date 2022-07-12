@@ -21,10 +21,6 @@ if (need_link_mpp_lib) {
   mpp_lib_path = "//device/soc/hisilicon/hi3516dv300/sdk_linux/out"
 }
 
-need_link_opencv_lib = true
-if (need_link_opencv_lib) {
-  opencv_lib_path = "//device/soc/hisilicon/hi3516dv300/sdk_linux/sample/taurus/ai_sample/third_party"
-}
 
 executable("smart_vendor_main") {
   output_name = "smart_vendor_main"
@@ -165,9 +161,6 @@ executable("smart_vendor_main") {
     ldflags += [ "-lvb_server" ]
     ldflags += [ "-lVoiceEngine" ]
 
-    opencv_lib_dir = rebase_path("$opencv_lib_path/output/opencv/lib")
-    ldflags += [ "-L$opencv_lib_dir" ]
-    ldflags += [ "-lopencv_world" ]
     ldflags += [ "-Wl,-rpath=//userdata/lib" ]
 
     deps = []
