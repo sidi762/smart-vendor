@@ -46,7 +46,7 @@ int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
 
     /* 输出收到的数据 */
     for (i = 0; i < RecvLen; i++) {
-        printf("0x%x ", buf[i]);
+        printf("%c", buf[i]);
     }
     printf("\r\n");
 
@@ -63,10 +63,10 @@ int waitForStartSignal()
     } else {
         printf("uart1 open successed\r\n");
     }
-    unsigned char* dataBuffer = (char *) malloc(6);
+    unsigned char* dataBuffer = (char *) malloc(5);
     while (1){
-        if(messageUARTRcvData(uartFd, dataBuffer, 6) &&
-            !strcmp(dataBuffer, START_COMMAND)){
+        if(messageUARTRcvData(uartFd, dataBuffer, 5) &&
+            strstr(dataBuffer, START_COMMAND)){
             return 1;
         }
     }
