@@ -23,12 +23,24 @@
 /* Display help info */
 static void SmartVendorHelp()
 {
-    printf("\nSmart vending machine 3516-vision client \n");
+    printf("\n *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n");
+    printf("\n SMART VENDING MACHINE 3516-VISION CLIENT \n");
     printf("Version 1.0\n");
-    printf("Developed by:\n");
-    printf("\t Sidi Liang\n");
+    printf("Developed by: Sidi Liang\n");
+    printf("Copyright (c) 2022 Sidi Liang\n");
+    printf("Licensed under the Apache License, Version 2.0\n");
     printf("Part of the Smart Vendor Project:\n");
-    printf("\t Sidi Liang, Yi Liu, Yicong Liu\n");
+    printf("\tSidi Liang, Yi Liu, Yicong Liu\n");
+    printf("\n    ________  _____ ______   ________  ________  _________        ___      ___ _______   ________   ________  ________  ________\n
+|\   ____\|\   _ \  _   \|\   __  \|\   __  \|\___   ___\     |\  \    /  /|\  ___ \ |\   ___  \|\   ___ \|\   __  \|\   __  \\n
+\ \  \___|\ \  \\\__\ \  \ \  \|\  \ \  \|\  \|___ \  \_|     \ \  \  /  / | \   __/|\ \  \\ \  \ \  \_|\ \ \  \|\  \ \  \|\  \\n
+\ \_____  \ \  \\|__| \  \ \   __  \ \   _  _\   \ \  \       \ \  \/  / / \ \  \_|/_\ \  \\ \  \ \  \ \\ \ \  \\\  \ \   _  _\\n
+ \|____|\  \ \  \    \ \  \ \  \ \  \ \  \\  \|   \ \  \       \ \    / /   \ \  \_|\ \ \  \\ \  \ \  \_\\ \ \  \\\  \ \  \\  \|\n
+   ____\_\  \ \__\    \ \__\ \__\ \__\ \__\\ _\    \ \__\       \ \__/ /     \ \_______\ \__\\ \__\ \_______\ \_______\ \__\\ _\\n
+  |\_________\|__|     \|__|\|__|\|__|\|__|\|__|    \|__|        \|__|/       \|_______|\|__| \|__|\|_______|\|_______|\|__|\|__|\n
+  \|_________|\n");                                                                                                         
+
+    printf("\n *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* \n");
 }
 
 /*
@@ -44,7 +56,12 @@ int main(int argc, char *argv[])
 
     fileInit();
 
-    while(true){ //Stage 2
+
+    /* Main Loop */
+    while(true){
+        //Stage 1
+        waitForStartSignal();
+        //Stage 2
         SMART_VENDOR_HAND_CLASSIFY();
         SAMPLE_PRT("\nHand classification ended, press enter to restart!\n");
         (void)getchar();

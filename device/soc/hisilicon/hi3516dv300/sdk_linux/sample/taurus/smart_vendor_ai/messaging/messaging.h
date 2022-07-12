@@ -19,6 +19,10 @@ extern "C" {
 ----------------------------------------------------------------*/
 void messageUARTSendData(int fd, char *payload);
 
+int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len);
+
+int waitForStartSignal();
+
 #ifdef __cplusplus
 #if __cplusplus
 }

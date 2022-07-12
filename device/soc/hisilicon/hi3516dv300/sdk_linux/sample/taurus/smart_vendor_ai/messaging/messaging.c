@@ -28,6 +28,8 @@
 #include "messaging.h"
 #include "json_helper.h"
 
+#define START_COMMAND "start"
+
 /* message receive */
 int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
 {
@@ -35,9 +37,9 @@ int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
     unsigned int RecvLen = len;
 
     /* Hi3516dv300 uart read */
-    readLen = UartRead(fd, buf, RecvLen, 1000); /* 1000 :time out */
+    readLen = UartRead(fd, buf, RecvLen, 5000); /* 5000 :time out */
     if (readLen <= 0) {
-        printf("uart_read data failed\r\n");
+        printf("\nWaiting for START signal from UART\r\n");
         return 0;
     }
     printf("read_len=%d\r\n", readLen);
@@ -51,6 +53,24 @@ int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
     return 1;
 }
 
+int waitForStartSignal()
+{
+    int uartFd = 0;
+    /* uart open init */
+    uartFd = UartOpenInit();
+    if (uartFd < 0) {
+        printf("uart1 open failed\r\n");
+    } else {
+        printf("uart1 open successed\r\n");
+    }
+    unsigned char* dataBuffer = (char *) malloc(6);
+    while (1){
+        if(messageUARTRcvData(uartFd, dataBuffer, 6) &&
+            !strcmp(dataBuffer, START_COMMAND)){
+            return 1;
+        }
+    }
+}
 
 void messageUARTSendData(int fd, char *payload)
 {

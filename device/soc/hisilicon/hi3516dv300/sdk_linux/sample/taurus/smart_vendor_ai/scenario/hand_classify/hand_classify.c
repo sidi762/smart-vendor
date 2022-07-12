@@ -67,13 +67,6 @@ HI_S32 Yolo2HandDetectResnetClassifyLoad(uintptr_t* model)
     *model = ret < 0 ? 0 : (uintptr_t)self;
     HandDetectInit(); // Initialize the hand detection model
     SAMPLE_PRT("Hand gesture classification model loaded\n");
-    /* uart open init */
-    uartFd = UartOpenInit();
-    if (uartFd < 0) {
-        printf("uart1 open failed\r\n");
-    } else {
-        printf("uart1 open successed\r\n");
-    }
     return ret;
 }
 

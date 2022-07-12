@@ -339,11 +339,11 @@ int UartRead(int uartFd, char *buf, int len, int timeoutMs)
         ret = select(uartFd + 1, &rset, NULL, NULL, &time);
         if (ret <= 0) {
             if (ret == 0) {
-                printf("time over!\r\n");
+                //printf("time over!\r\n");
                 return -1;
             }
             if (ret == -1) {
-                printf("select error!\r\n");
+                printf("[ERROR][UART] select error!\r\n");
                 // 信号中断
                 continue;
             }
