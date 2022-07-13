@@ -15,6 +15,8 @@
 
 #include <hi_task.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <hi_wifi_api.h>
 #include <hi_mux.h>
 #include <hi_io.h>
@@ -53,6 +55,8 @@
 
 int g_ligthStatus = -1;
 int control_success = 0;
+char *control_flag = "failed";
+char *message = NULL;
 UartDefConfig uartDefConfig = {0};
 //int slot1 = 20,slot2 = 20, slot3 = 20, slot4 = 20;
 typedef void (*FnMsgCallBack)(hi_gpio_value val);
@@ -163,8 +167,6 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
     IOT_LOG_DEBUG("RCVMSG:QOS:%d TOPIC:%s PAYLOAD:%s\r\n", qos, topic, payload);
     printf(strstr(payload, WECHAT_SUBSCRIBE_control));
     /* 云端下发命令后，板端的操作处理 */
-    //if (strcmp(topic, topic_data)==0){
-
      if (strstr(payload, WECHAT_SUBSCRIBE_control) != NULL) {
         //printf(strstr(payload, WECHAT_SUBSCRIBE_control));
 
@@ -175,6 +177,7 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
             engine_stop(6);
             wechatControlDeviceMsg(HI_GPIO_VALUE1);
             control_success = 1;
+            control_flag = payload;
         }
         else if (strstr(payload, WECHAT_SUBSCRIBE_channel2) != NULL) {
             engine_start(7);
@@ -182,6 +185,7 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
             engine_stop(7);
             wechatControlDeviceMsg(HI_GPIO_VALUE1);
             control_success = 1;
+            control_flag = payload;
         }
         else if (strstr(payload, WECHAT_SUBSCRIBE_channel3) != NULL) {
             engine_start(2);
@@ -189,6 +193,7 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
             engine_stop(2);
             wechatControlDeviceMsg(HI_GPIO_VALUE1);
             control_success = 1;
+            control_flag = payload;
         }
         else if (strstr(payload, WECHAT_SUBSCRIBE_channel4) != NULL) {
             engine_start(10);
@@ -196,12 +201,18 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
             engine_stop(10);
             wechatControlDeviceMsg(HI_GPIO_VALUE1);
             control_success = 1;
+            control_flag = payload;
         }
        
      }
 
-    //}
     return HI_NULL;
+}
+
+static void DemoMsgRcvsynchronize(int qos, const char *topic, const char *payload)
+{
+    message = payload;
+
 }
 
 /* publish sample */
@@ -245,9 +256,9 @@ static void DemoMsgRcvCallBack(int qos, const char *topic, const char *payload)/
 
 // < this is the demo main task entry,here we will set the wifi/cjson/mqtt ready and
 // < wait if any work to do in the while
-static hi_void *DemoEntry(const char *arg)
-{
-    unsigned char *control_flag = "success";
+//static hi_void *DemoEntry(const char *arg)
+//{
+    
     //int feedback = 0;
 
 
@@ -255,7 +266,7 @@ static hi_void *DemoEntry(const char *arg)
     cJsonInit();
     IoTMain();
     /* 云端下发回调 */
-    IoTSetMsgCallback(DemoMsgRcvCallBack);
+    //IoTSetMsgCallback(DemoMsgRcvCallBack);
 
     /*if (control_success == 1)
     {
@@ -271,10 +282,10 @@ static hi_void *DemoEntry(const char *arg)
         // 用户可以在这调用发布函数进行发布，需要用户自己写调用函数 
         IotPublishSample(slot1,slot2,slot3,slot4); // 发布例程
 #endif*/
-        TaskMsleep(TWO_SECOND);
+        //TaskMsleep(TWO_SECOND);
     
-    return NULL;
-}
+    //return NULL;
+//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 int SetUartRecvFlag(UartRecvDef def)
@@ -320,30 +331,56 @@ static hi_void *UartDemoTask(char *param)
 {
     hi_u8 uartBuff[UART_BUFF_SIZE] = {0};
     char *recBuff = NULL;
-    int feedback = 0;
-    unsigned char *control_flag = "success";
+    int feedback_1 = 0;
+    int feedback_2 = 0;
+    int length = 0;
+    unsigned char *detect_flag = "start";
+    unsigned char *data_send = "jdata";
     IotGpioValue value = IOT_GPIO_VALUE0;
 
     hi_unref_param(param);
     printf("Initialize uart demo successfully, please enter some datas via DEMO_UART_NUM port...\n");
     Uart1GpioCOnfig();
     Sensor_init();
-    IoTGpioGetInputVal(human_detect_io, &value);
-    value = IOT_GPIO_VALUE1;
+    printf("Please wait for 60 seconds for the system to start...\n");
+    TaskMsleep(60000);
+    printf("Done!\n");
     
     for (;;) 
     {
+        int isTimeOut = 0;
+      
+        IoTGpioGetInputVal(human_detect_io, &value);
 
         if(value == IOT_GPIO_VALUE1)
         {
+            //get from cloud and send to 3516
+            IoTUartWrite(DEMO_UART_NUM, detect_flag, 5);
+            IoTSetMsgCallback(DemoMsgRcvsynchronize);
+            //start to work
+            feedback_1 = IoTUartWrite(DEMO_UART_NUM, detect_flag, 5);//
+            printf("uart feedback %d\n", feedback_1);
+           
+            //TaskMsleep(20);
             uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
-            if ((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55)) {
-
-                if (GetUartConfig(UART_RECEIVE_FLAG) == HI_FALSE) {
-                    (void)memcpy_s(uartDefConfig.g_receiveUartBuff, uartDefConfig.g_uartLen,
-                        uartBuff, uartDefConfig.g_uartLen);/*uartBuff中的信息放到uartDefConfig.g_receiveUartBuff*/
-                    (void)SetUartRecvFlag(UART_RECV_TRUE);
+            int waitCount = 0;
+            while (!((uartDefConfig.g_uartLen > 0) && (uartBuff[0] == 0xaa) && (uartBuff[1] == 0x55))) {
+                uartDefConfig.g_uartLen = IoTUartRead(DEMO_UART_NUM, uartBuff, UART_BUFF_SIZE);
+                TaskMsleep(50);
+                waitCount += 1;
+                if(waitCount > 400){
+                    isTimeOut = 1;
+                    printf("Timeout!\n");
+                    break;
                 }
+                    
+            }
+            if(isTimeOut)
+                continue;
+            if (GetUartConfig(UART_RECEIVE_FLAG) == HI_FALSE) {
+                (void)memcpy_s(uartDefConfig.g_receiveUartBuff, uartDefConfig.g_uartLen,
+                    uartBuff, uartDefConfig.g_uartLen);/*uartBuff中的信息放到uartDefConfig.g_receiveUartBuff*/
+                (void)SetUartRecvFlag(UART_RECV_TRUE); 
             }
             printf("UART start\n");
             printf("len:%d\n",  uartDefConfig.g_uartLen);
@@ -372,14 +409,20 @@ static hi_void *UartDemoTask(char *param)
             free(recBuff);
             TaskMsleep(50);
             IoTSetMsgCallback(DemoMsgRcvCallBack);
-            if (control_success == 1)
+            while (control_success == 0)
             {
-             feedback = IoTUartWrite(DEMO_UART_NUM, control_flag, 7);
-             printf("feedback: %d\n", feedback);
-             control_success = 0;
+                TaskMsleep(50);
             }
+
+            length = strlen(control_flag);
+            char len = length+'0';
+            IoTUartWrite(DEMO_UART_NUM, len, strlen(len));
+            TaskMsleep(10);
+            feedback_2 = IoTUartWrite(DEMO_UART_NUM, control_flag, length);
+            printf("feedback: %d\n", feedback_2);
         
         }
+        TaskMsleep(50);
     }
     return HI_NULL;
 }
