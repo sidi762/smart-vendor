@@ -22,6 +22,10 @@ void fileInit();
 ----------------------------------------------------------------*/
 void saveVendorDataToFile(SlotInfo vendorData[], int len);
 
+int remainingNumUpdate(int slotNum);
+
+char* memVendorDataToShadow();
+
 #ifdef __cplusplus
 #if __cplusplus
 }

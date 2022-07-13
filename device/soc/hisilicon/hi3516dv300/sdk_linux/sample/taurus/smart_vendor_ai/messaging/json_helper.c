@@ -168,7 +168,7 @@ char* vendorDataToJson(SlotInfo items[], int len)
     cJSON *productsArray = NULL;
 
     root = cJSON_CreateObject();
-    productsArray = cJSON_AddArrayToObject(root, "products");
+    productsArray = cJSON_AddArrayToObject(root, "product_info");
     for(int i = 0; i < len; i += 1){
         cJSON_AddItemToArray(productsArray, fld = cJSON_CreateObject());
         cJSON_AddNumberToObject(fld, "slot_num", items[i].slot_num);
@@ -203,7 +203,7 @@ int jsonToVendorData(char* jsonString, SlotInfo vendorDataPtr[])
        }
     }
 
-    items = cJSON_GetObjectItemCaseSensitive(vendorDataJson, "products");
+    items = cJSON_GetObjectItemCaseSensitive(vendorDataJson, "product_info");
     int count = 0;
     cJSON_ArrayForEach(item, items){
         if(count < NUMBER_OF_SLOTS){

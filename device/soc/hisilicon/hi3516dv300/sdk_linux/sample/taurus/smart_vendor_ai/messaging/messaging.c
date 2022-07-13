@@ -27,8 +27,12 @@
 #include "cJSON.h"
 #include "messaging.h"
 #include "json_helper.h"
+#include "data_store.h"
 
 #define START_COMMAND "start"
+#define DATA_COMMAND "jdata"
+#define SUCCESS_COMMAND "success"
+#define NUMBER_OF_SLOTS 4
 
 /* message receive */
 int messageUARTRcvData(int fd, unsigned char *buf, unsigned int len)
@@ -65,9 +69,45 @@ int waitForStartSignal()
     }
     unsigned char* dataBuffer = (char *) malloc(5);
     while (1){
-        if(messageUARTRcvData(uartFd, dataBuffer, 5) &&
-            strstr(dataBuffer, START_COMMAND)){
-            return 1;
+        if(messageUARTRcvData(uartFd, dataBuffer, 5)){
+            if(strstr(dataBuffer, START_COMMAND)){
+                free(dataBuffer);
+                return 1;
+            }else if(strstr(dataBuffer, DATA_COMMAND)){
+                unsigned char* jsonDataBuffer = (char *) malloc(255);
+                messageUARTRcvData(uartFd, jsonDataBuffer, 255);
+                SlotInfo recvVendorData[NUMBER_OF_SLOTS];
+                jsonToVendorData(jsonDataBuffer, recvVendorData);
+                updateMemVendorData(recvVendorData);
+                saveVendorDataToFile(recvVendorData,
+                    (sizeof(recvVendorData)/sizeof(recvVendorData[0])));
+                free(jsonDataBuffer);
+            }
+        }
+    }
+}
+
+int waitForSuccessSignal()
+{
+    int uartFd = 0;
+    /* uart open init */
+    uartFd = UartOpenInit();
+    if (uartFd < 0) {
+        printf("uart1 open failed\r\n");
+    } else {
+        printf("uart1 open successed\r\n");
+    }
+    unsigned char* dataBuffer = (char *) malloc(10);//To be confirmed
+    while (1){
+        if(messageUARTRcvData(uartFd, dataBuffer, 10)){
+            if(strstr(dataBuffer, SUCCESS_COMMAND)){
+                free(dataBuffer);
+                //TBD: Update data
+                remainingNumUpdate(1);
+                //Sync data
+                messageUARTSendData(uartFd, memVendorDataToShadow());
+                return 1;
+            }
         }
     }
 }

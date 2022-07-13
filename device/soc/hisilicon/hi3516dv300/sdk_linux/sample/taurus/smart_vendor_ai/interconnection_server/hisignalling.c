@@ -351,7 +351,7 @@ int UartRead(int uartFd, char *buf, int len, int timeoutMs)
         } else {
             ret = read(uartFd, (char *)readBuf + rsum, readLen - rsum);
             if (ret < 0) {
-                printf("read data failed\r\n");
+                printf("[ERROR][UART] read data failed\r\n");
                 return ret;
             } else {
                 rsum += ret;

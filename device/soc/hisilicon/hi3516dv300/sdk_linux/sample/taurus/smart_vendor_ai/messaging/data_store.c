@@ -62,6 +62,25 @@ void saveVendorDataToFile(SlotInfo vendorData[], int len)
     return;
 }
 
+void updateMemVendorData(SlotInfo newVendorData[]){
+    for(int i = 0; i < NUMBER_OF_SLOTS; i += 1){
+        vendorData[i] = newVendorData[i];
+    }
+}
+
+int remainingNumUpdate(int slotNum){
+    if(vendorData[slotNum - 1].remaining_num - 1 >= 0){
+        vendorData[slotNum - 1].remaining_num -= 1;
+        return 1;
+    }else{
+        return -1;
+    }
+}
+
+char* memVendorDataToShadow(){
+    return vendorDataUpdateShadow(vendorData, (sizeof(vendorData)/sizeof(vendorData[0])), 1);
+}
+
 void fileInit()
 {
     struct stat st = {0};
