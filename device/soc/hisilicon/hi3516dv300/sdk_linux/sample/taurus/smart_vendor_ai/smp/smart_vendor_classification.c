@@ -227,7 +227,8 @@ HI_VOID* VendorGetVpssChnFrameAndClassify(void* arguments)
     SAMPLE_PRT("vpssGrp:%d, vpssChn0:%d\n", g_aicMediaInfo->vpssGrp, g_aicMediaInfo->vpssChn0);
     int timeoutCount = 0;
     while (HI_FALSE == g_bAiProcessStopSignal) {
-        if(timeoutCount < 100000){
+        system("sleep 0.1");
+        if(timeoutCount < 200){
             g_bAiProcessStopSignal = HI_TRUE;
             SAMPLE_PRT("Timeout!\n");
             break;
