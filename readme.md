@@ -48,13 +48,13 @@
 
 ## 第二部分  系统组成及功能说明
 ### 2.1	整体介绍
-![img1](https://gitee.com/sidi762/smart-vendor/blob/master/img/img1.png "图 1")  
+![img1](https://gitee.com/sidi762/smart-vendor/raw/master/img/img1.png "图 1")  
 本作品主要分为如下五个模块，如图 1 所示：基于Hi3516DV300 Taurus AI计算机视觉平台的机器视觉手势识别模块、基于Hi3861V100 Pegasus WiFi-IoT套件的传感器、电机驱动及物联网通信模块、基于微信小程序开发的管理后台模块与可视化用户界面模块，和云端物联网平台模块。
 
 机器视觉手势识别模块可获取实时视频流，进行板端AI推理，实现手势识别功能。传感器、电机驱动及物联网通信模块连接并控制红外传感器、直流电机驱动板等外设，通过UART串口与机器视觉手势识别模块进行通信，向机器视觉手势识别模块发送启动信号、接收手势识别结果。同时该模块使用MQTT物联网通信协议与腾讯云物联网通信平台进行通信，并可根据物联网通信平台下发的控制指令控制直流电机工作。可视化界面显示供选择的货道信息，通过MQTT协议与物联网通信平台进行通信，传输完成交易流程所需要的信息。管理后台小程序中包括剩余货量查询、货道信息修改等功能，通过MQTT协议与物联网通信平台进行通信。
 
 图 2 展示了系统的完整工作流程。  
-![img2](https://gitee.com/sidi762/smart-vendor/blob/master/img/img2.png "图 2")  
+![img2](https://gitee.com/sidi762/smart-vendor/raw/master/img/img2.png "图 2")  
 
 ### 2.2 各模块介绍
 #### 2.2.1 机器视觉手势识别模块
@@ -62,28 +62,28 @@
 机器视觉手势识别模块基于Hi3516DV300 Taurus AI计算机视觉平台进行开发，如图 3所示。该模块使用自身摄像头获取实时视频流，利用NNIE神经网络引擎对获取的画面帧进行板端AI推理，实现手势识别功能。同时，售货机相关数据（如产品名称、价格等）以JS对象简谱（JavaScript Object Notation，JSON）格式存储在该模块的SD卡中。该模块与传感器、电机驱动及物联网通信模块通过UART串口进行实时通信，以JSON数据格式将识别结果发送至传感器、电机驱动及物联网通信模块。同时，在交易完成后，更新后的售货机相关数据也通过UART串口发送至传感器、电机驱动及物联网通信模块，使其在系统各模块间同步。  
 
 
-![img3](https://gitee.com/sidi762/smart-vendor/blob/master/img/img3.png "图 3: 机器视觉手势识别模块实拍图")  
+![img3](https://gitee.com/sidi762/smart-vendor/raw/master/img/img3.png "图 3: 机器视觉手势识别模块实拍图")  
 
 
 ##### 2.2.1.1 使用深度神经网络进行静态手势识别
-![img4](https://gitee.com/sidi762/smart-vendor/blob/master/img/img4.png "图 4: 静态手势识别实现方案")  
+![img4](https://gitee.com/sidi762/smart-vendor/raw/master/img/img4.png "图 4: 静态手势识别实现方案")  
 
 我们使用了Yolo v2与Resnet18双神经网络串联作为静态手势识别方案，如图 4所示。获取到画面后，首先使用Yolo v2深度神经网络进行手部检测、裁剪，再将裁切后的图片送至Resnet18深度神经网络进行静态手势分类。经实验验证，这个方案可有效排除背景等无效信息对识别结果的干扰，极大提高了静态手势识别准确率。我们发现现有成熟Yolo v2手部检测模型具有识别准确率高、稳定性强的优点，因此我们在手部检测及裁切环节中直接使用了该模型。我们自行拍摄制作了静态数字手势数据集，数据集共包含9种数字手势、5种其他手势共14种手势的图片与一定数量的背景集，共约3万张图片。我们按照约6:2:2的比率随机划分出了训练集、验证集与测试集。我们将该数据集用于Resnet18 静态手势识别网络的训练。在训练过程中我们应用了图像归一化等预处理方法，应用了随机裁切等数据增强手段、并应用了降低学习率、随机梯度下降（Stochastic gradient descent， SGD）优化器等训练微调技术。结果证明，我们采取的这些策略有效提高了模型准确率。  
 
-![img5](https://gitee.com/sidi762/smart-vendor/blob/master/img/img5.png "图 5: GradCam++ 可视化结果")   
+![img5](https://gitee.com/sidi762/smart-vendor/raw/master/img/img5.png "图 5: GradCam++ 可视化结果")   
 
 此外，我们在训练过程中应用了GradCam++可视化技术对模型训练结果进行了可视化，针对目标类别绘制了热图，如图 5所示。我们以此为依据评估模型训练效果，在后续训练中对数据集进行了有针对性的改进，并确保了我们的模型具有良好的可解释性。  
 
-![img6](https://gitee.com/sidi762/smart-vendor/blob/master/img/img6.png "图 6: 静态手势识别模型处理流程")   
+![img6](https://gitee.com/sidi762/smart-vendor/raw/master/img/img6.png "图 6: 静态手势识别模型处理流程")   
 
 图 6 为我们静态手势识别模型的处理、适配、部署流程。我们使用NNIE RuyiStudio工具对训练好的模型进行了量化处理，降低了性能需求，使其适用于嵌入式设备。在板端识别时，针对单次识别效果欠佳的问题，我们采取连续多次采样，取用连续相同识别结果为最终结果的策略，有效提高了系统识别稳定性与准确率。  
 
 #### 2.2.2 传感器、电机驱动及物联网通信模块
 传感器、电机驱动及物联网通信模块以Hi3861V100 Pegasus平台为核心来实现对4个货道的电机的控制以及与其他各模块之间的通讯和数据传输，如图 7所示。  
 
-![img7](https://gitee.com/sidi762/smart-vendor/blob/master/img/img7.png "图 7: 传感器、电机驱动及物联网通信模块实拍图")  
+![img7](https://gitee.com/sidi762/smart-vendor/raw/master/img/img7.png "图 7: 传感器、电机驱动及物联网通信模块实拍图")  
 
-![img8](https://gitee.com/sidi762/smart-vendor/blob/master/img/img8.png "图 8: 传感器、电机驱动及物联网通信模块结构框图")  
+![img8](https://gitee.com/sidi762/smart-vendor/raw/master/img/img8.png "图 8: 传感器、电机驱动及物联网通信模块结构框图")  
 
 ##### 2.2.2.1 各货道出货电机控制  
 考虑到智能售货机中各个货道商品的重量以及整个系统的供电能力，团队选用N20减速电机来驱动货道中的弹簧，以达到低电压高扭力的效果。本设计通过控制电机转动的时间来使货物掉落。由于Pegasus外设板5V供电电压的限制，在设计中我们采用了L298N双H桥直流电机驱动模块。每个驱动模块都有一个电池盒作为外部供电电源，这样也可以保护Pegasus核心板。每个驱动模块最多可以连接两个电机。通过将驱动模块的输入端口与Pegasus外设上的输出GPIO端口相连以实现程序对电机的控制。  
@@ -95,11 +95,11 @@
 智能售货机利用人体红外传感器实现感知顾客靠近的功能，当用户靠近后再启动识别流程，以此降低系统运行能耗。传感器利用热释电原理检测人体活动，一旦人进入探测区域内，即发出高电平信号，如图 10所示。
 
 
-![img10](https://gitee.com/sidi762/smart-vendor/blob/master/img/img10.png "图 10: 人体红外传感器")  
+![img10](https://gitee.com/sidi762/smart-vendor/raw/master/img/img10.png "图 10: 人体红外传感器")  
 
 
 ##### 2.2.2.4 基于MQTT物联网通讯协议的云端互联
-![img11](https://gitee.com/sidi762/smart-vendor/blob/master/img/img11.png "图 11: Hi3861V100云端互联示意图")  
+![img11](https://gitee.com/sidi762/smart-vendor/raw/master/img/img11.png "图 11: Hi3861V100云端互联示意图")  
 
 1. Wi-Fi连接  
 团队充分利用Hi3861V100上的Wi-Fi模块，通过调用自有API实现与场所Wi-Fi的连接。团队通过代码实现了Pegasus平台对网络的自我诊断，当Wi-Fi信号出现波动，连接不稳定时，系统会进行自我修复，重新连接网络确保正常工作。本作品配有网络连接信号灯，便于工作人员日常管理。  
@@ -107,22 +107,22 @@
 2. 云端互联  
 本作品采用腾讯云的物联网平台进行后台管理和数据的暂时储存。Pegasus平台作为整个系统中的中枢，具有将3516模块中储存的货道信息转移到云上的能力。本作品采用MQTT数据传输协议来实现快速稳定的数据传输。在接受云端数据方面，团队为系统单独创建了一个线程用来监听云端，每当有云端有数据下发，Pegasus都能够快速判断并作出正确反应。多线程架构的建立使得系统处理任务更加迅速，同时避免了不同任务之间的干扰，使得系统更加高效可靠。  
 
-![img12](https://gitee.com/sidi762/smart-vendor/blob/master/img/img12.png "图 12: Pegasus平台系统程序架构")  
+![img12](https://gitee.com/sidi762/smart-vendor/raw/master/img/img12.png "图 12: Pegasus平台系统程序架构")  
 
 
 #### 2.2.3 可视化界面模块  
 可视化界面使用微信小程序实现，由一台可运行微信小程序的终端显示。界面设计上，我们将清晰展示产品信息作为首要目标，因此我们设计将页面四等分，每一个区域显示对应商品的名称与价格，并将价格使用红色字体标出，达到突出显示的效果。可视化界面模块与腾讯云平台通过MQTT协议进行数据传输。当顾客付款成功后，终端会向云端发送success信号，并通过云转发至Pegasus平台驱动电机出货。每当交易完成，终端就会从云端拉取各个货道信息并更新界面，保持信息的同步。  
 
-![img13](https://gitee.com/sidi762/smart-vendor/blob/master/img/img13.png "图 13: 用户可视化界面")    
+![img13](https://gitee.com/sidi762/smart-vendor/raw/master/img/img13.png "图 13: 用户可视化界面")    
 
 #### 2.2.4 后台管理模块  
 在售货机的后台管理小程序中，我们使用了与用户界面相似的设计布局，并将可更改的部分使用蓝色进行标注，方便后台维护人员更新售货机产品数据。除此之外，我们还自制了一份手势温馨提示，内容为每个货道对应的标准手势图示，降低人们在初次使用此类售货机时的学习成本。后台管理模块也是通过MQTT协议与云端通讯以保持数据的同步。每当货道信息发生变化，后台就会拉取新的数据进行更新。当维护人员进行补货时，可以通过界面操作来更改货道信息。更改后的信息也会及时传到云端进行数据同步。图14为后台管理界面。  
 
-![img14](https://gitee.com/sidi762/smart-vendor/blob/master/img/img14.png "图 14: 后台管理小程序界面")  
+![img14](https://gitee.com/sidi762/smart-vendor/raw/master/img/img14.png "图 14: 后台管理小程序界面")  
 
 #### 2.2.5 云端物联网平台模块
 
-![img15](https://gitee.com/sidi762/smart-vendor/blob/master/img/img15.png "图 15: MQTT通信示意图")  
+![img15](https://gitee.com/sidi762/smart-vendor/raw/master/img/img15.png "图 15: MQTT通信示意图")  
 
 本作品采用腾讯云物联网通信平台作为云端管理系统进行数据的传输与短时储存。我们选用MQTT物联网通讯协议实现各模块间与云端的通信任务。不同模块通过订阅不同的Topic来实现与云端的数据传输与权限管理，同时在腾讯云物联网通信平台内部我们使用其提供的规则引擎来实现不同Topic之间数据的转发，避免相互干扰，确保数据传输的可靠性。我们的云端物联网平台的通讯结构如图15所示。  
 
@@ -130,12 +130,12 @@
 `$shadow/operation/${productId}/${deviceName}`：用于发布（上行）消息，可实现对设备影子数据的 get/update 操作。  
 `$shadow/operation/result/${productId}/${deviceName}`：用于订阅（下行）消息，影子服务端通过此 Topic 发送应答和推送消息。  
 
-![img16](https://gitee.com/sidi762/smart-vendor/blob/master/img/img16.png "图 16: 设备影子数据传输")  
+![img16](https://gitee.com/sidi762/smart-vendor/raw/master/img/img16.png "图 16: 设备影子数据传输")  
 
 #### 2.2.6 作品硬件设计
 在售货机的初期设计阶段，我们使用了CAD设计软件对硬件进行了建模设计并决定使用透明亚克力板作为搭建材料。由于其良好的透光性，使用亚克力板可方便展示售货机内部结构，如图 17所示。然而，我们发现，亚克力板会导致售货机内部较为严重的光反射现象和背景干扰。因此，我们在第二版本中选择使用白色不透明亚克力板和透明亚克力板相结合搭建，这样不仅可以观察到售货机的工作状态，也可以极大的改善装置内部反光情况。  
 
-![img17](https://gitee.com/sidi762/smart-vendor/blob/master/img/img17.png "图 17: 初版作品实拍图")
+![img17](https://gitee.com/sidi762/smart-vendor/raw/master/img/img17.png "图 17: 初版作品实拍图")
 
 ## 第三部分  完成情况及性能参数
 我们已经基本完成了各模块的开发以及系统联调，已基本实现全部设计功能，并且相关性能均达到设计指标。以下将分模块介绍具体完成情况。  
@@ -145,8 +145,8 @@
 
 由测试结果可得，轻量化后的手势识别模型准确率在92%左右。虽然略低于Pytorch框架下模型准确率，但考虑到轻量化过程中精度的损失，92%准确率仍然在我们预期范围内，可以接受。  
 
-![img19](https://gitee.com/sidi762/smart-vendor/blob/master/img/img19.png "图 19: 模型训练过程中损失率（loss）的变化")  
-![img20](https://gitee.com/sidi762/smart-vendor/blob/master/img/img20.png "图 20: 训练过程中模型识别准确率（accuracy）的变化")  
+![img19](https://gitee.com/sidi762/smart-vendor/raw/master/img/img19.png "图 19: 模型训练过程中损失率（loss）的变化")  
+![img20](https://gitee.com/sidi762/smart-vendor/raw/master/img/img20.png "图 20: 训练过程中模型识别准确率（accuracy）的变化")  
 
 ### 3.2 传感器、电机驱动及物联网通信模块
 
@@ -156,8 +156,8 @@ Pegasus平台系统基本搭建完成并成功烧录到Hi3861V100开发板中成
 #### 3.2.2 硬件  
 已成功完成电路搭建与连接，系统能够正常工作，具体实物如图21所示：  
 
-![img21](https://gitee.com/sidi762/smart-vendor/blob/master/img/img21.png "图 21 1: 硬件实物图")  
-![img22](https://gitee.com/sidi762/smart-vendor/blob/master/img/img21_1.png "图 21 2: 硬件实物图")
+![img21](https://gitee.com/sidi762/smart-vendor/raw/master/img/img21.png "图 21 1: 硬件实物图")  
+![img22](https://gitee.com/sidi762/smart-vendor/raw/master/img/img21_1.png "图 21 2: 硬件实物图")
 
 ### 3.3 可视化界面模块、后台管理模块、云端物联网平台模块、及作品硬件设计
 我们已经完成了全部的售货机搭建工作，并且已经完成各模块安装与功能验证。与此同时，我们已经完成了可视化界面、管理后台模块与其余模块通过腾讯云物联网平台进行的互联功能验证。我们完成并验证了管理后台模块小程序更改商品信息，并将其自动上传至腾讯云物联网平台的设备影子，同步至售货机的界面的全流程。  
