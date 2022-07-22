@@ -17,7 +17,9 @@ group("hispark_taurus_sdk") {
       ":sdk_linux_lite_libs",
       ":sdk_make",
       "//kernel/linux/build:linux_kernel",
-      "sample/taurus/ai_sample:hi3516dv300_ai_sample",
+      #"sample/taurus/ai_sample:hi3516dv300_ai_sample",
+      "sample/taurus/smart_vendor_ai:smart_vendor_ai",
+      #"sample/platform/svp/nnie:hi3516dv300_nnie_sample",
     ]
   } else {
     deps = [

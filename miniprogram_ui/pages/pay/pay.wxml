@@ -1,0 +1,4 @@
+<view class='image_'>
+	<image src="../../image/pay.png" class='img' >
+	</image>
+</view>
