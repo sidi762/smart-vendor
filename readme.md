@@ -1,11 +1,5 @@
 # 基于手势识别的非接触式智能商品售卖机
-### 梁思地 刘奕 刘亦骢
-![license](https://img.shields.io/github/license/sidi762/smart-vendor?logo=gitee&style=for-the-badge)](./LICENSE)  
-![linux](https://img.shields.io/badge/GNU-Linux-green?style=flat&logo=GNU)
-![OHOS](https://img.shields.io/badge/OpenAtom-OpenHarmony-green?style=flat&logo=Huawei)
-![miniprogram](https://img.shields.io/badge/WeChat-Mini%20Program-green?style=flat&logo=WeChat)
-
-
+#### 梁思地 刘奕 刘亦骢  
 ```
   _____ __  __          _____ _______  __      ________ _   _ _____   ____  _____  
  / ____|  \/  |   /\   |  __ \__   __| \ \    / /  ____| \ | |  __ \ / __ \|  __ \  
@@ -14,6 +8,10 @@
  ____) | |  | |/ ____ \| | \ \  | |       \  /  | |____| |\  | |__| | |__| | | \ \  
 |_____/|_|  |_/_/    \_\_|  \_\ |_|        \/   |______|_| \_|_____/ \____/|_|  \_\  
 ```
+[![license](https://img.shields.io/github/license/sidi762/smart-vendor?logo=gitee&style=for-the-badge)](./LICENSE)  
+![linux](https://img.shields.io/badge/GNU-Linux-green?style=flat&logo=GNU)
+![OHOS](https://img.shields.io/badge/OpenAtom-OpenHarmony-green?style=flat&logo=Huawei)
+![miniprogram](https://img.shields.io/badge/WeChat-Mini%20Program-green?style=flat&logo=WeChat)  
 
   Copyright (c) 2022 Sidi Liang, Yi Liu, Yicong Liu.  
   Licensed under the Apache License, Version 2.0 (the "License");  
