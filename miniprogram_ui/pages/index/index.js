@@ -125,7 +125,7 @@ Page({
       this.data.client.on("reconnect", () => {
         console.log("reconnecting...");
         wx.setNavigationBarTitle({
-          title: '商品选择（重连中）',
+          title: '商品选择（重连中...）',
         })
       });
 
