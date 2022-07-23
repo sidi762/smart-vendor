@@ -203,9 +203,11 @@ Page({
                 price4: this.data.price4
             }) 
         } else if (received.type == "update") {
-            this.shadowVersion = received.version
-            console.log("version updated to" + this.shadowVersion)
-            this.reportToShadow(this.lastReportedToShadowMsg)
+            this.shadowVersion = received.metadata.version
+            console.log("version updated to " + this.shadowVersion)
+            if(received.result == 5005){
+                this.reportToShadow(this.lastReportedToShadowMsg)
+            }
         }
     },
 
@@ -316,6 +318,6 @@ Page({
     onLoad: function () {
         this.connect() 
         this.sendDataRequest() 
-        //this.startDataUpdateTimer() 
+        this.startDataUpdateTimer() 
     },
 })
