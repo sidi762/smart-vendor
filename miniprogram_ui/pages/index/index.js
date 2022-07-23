@@ -203,8 +203,10 @@ Page({
                 price4: this.data.price4
             }) 
         } else if (received.type == "update") {
-            this.shadowVersion = received.metadata.version
-            console.log("version updated to " + this.shadowVersion)
+            console.log(received)
+            this.shadowVersion = received.payload.version
+            console.log("version updated to ")
+            console.log(this.shadowVersion)
             if(received.result == 5005){
                 this.reportToShadow(this.lastReportedToShadowMsg)
             }
