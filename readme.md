@@ -12,6 +12,8 @@
 ![linux](https://img.shields.io/badge/GNU-Linux-green?style=flat&logo=GNU)
 ![OHOS](https://img.shields.io/badge/OpenAtom-OpenHarmony-green?style=flat&logo=Huawei)
 ![miniprogram](https://img.shields.io/badge/WeChat-Mini%20Program-green?style=flat&logo=WeChat)  
+[![JavaScript Style
+Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)  
 
   Copyright (c) 2022 Sidi Liang, Yi Liu, Yicong Liu.  
   Licensed under the Apache License, Version 2.0 (the "License");  
