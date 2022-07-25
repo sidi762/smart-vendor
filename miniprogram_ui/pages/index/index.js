@@ -114,7 +114,7 @@ Page({
           console.log('receivedMessage')
           const currMsg = this.data.shadowMsg ? `<br/>${payload}` : payload
           this.setValue('shadowMsg', this.data.shadowMsg.concat(currMsg))
-          this.shadowSyncDeal()
+          this.processSyncMessage()
           this.data.shadowMsg = ''
         }
       })
@@ -146,6 +146,15 @@ Page({
       })
       console.log('mqtt.connect error', error)
     }
+  },
+
+  disconnect () {
+    this.data.client.end()
+    this.data.client = null
+    this.setValue('conenctBtnText', '连接')
+    wx.setNavigationBarTitle({
+      title: '商品选择（未连接）'
+    })
   },
 
   subscribe () {
@@ -220,7 +229,7 @@ Page({
     }
   },
 
-  shadowSyncDeal () {
+  processSyncMessage () {
     const received = JSON.parse(this.data.shadowMsg)
     console.log(received)
     this.data.name1 = received.state.reported.product_info[0].product_name
@@ -312,14 +321,6 @@ Page({
     }
   },
 
-  disconnect () {
-    this.data.client.end()
-    this.data.client = null
-    this.setValue('conenctBtnText', '连接')
-    wx.setNavigationBarTitle({
-      title: '商品选择（未连接）'
-    })
-  },
   onShow: function () {
     if (this.data.paying) {
       this.publish()
