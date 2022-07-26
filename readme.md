@@ -1,5 +1,5 @@
 # 基于手势识别的非接触式智能商品售卖机
-## Smart Vendor: A Smart, Non-Contact Vending Machine based on Static Gesture Recognition
+### Smart Vendor: A Smart, Non-Contact Vending Machine based on Static Gesture Recognition
 #### 梁思地 刘奕 刘亦骢  
 ```
   _____ __  __          _____ _______  __      ________ _   _ _____   ____  _____  
@@ -31,6 +31,7 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
 
   ## __目录__
 
+  * [__文件组成说明__](#文件组成说明)
   * [__设计概述__](#设计概述)
     * [应用领域](#应用领域)
     * [主要技术特点](#主要技术特点)
@@ -43,6 +44,11 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
     * [可视化界面模块、后台管理模块、云端物联网平台模块及作品硬件设计](#3.-可视化界面模块、后台管理模块、云端物联网平台模块及作品硬件设计)
   * [__参考文献__](#参考文献)
 
+## __文件组成说明__  
+* `./device/soc/hisilicon/hi3516dv300/sdk_linux/sample/taurus/smart_vendor_ai`：机器视觉手势识别模块（Hi3516DV300开发板）软件代码
+* `./applications/sample/wifi-iot`：传感器、电机驱动及物联网通信模块（Hi3861V100开发板）软件代码
+* `./miniprogram_ui`：可视化界面模块（微信小程序）
+* `./dl`：静态手势识别模型文件以及部分训练相关代码
 ## __设计概述__
 
 自动售货机自发明以来得到了广泛流行，给人类生活带来了极大方便。然而，在当今新冠肺炎疫情的背景下，自动售货机按钮、 触屏的交互方式要求用户直接接触设备，存在一定疫情传播风险，因此需要设计一种无接触的交互方式以降低疫情传播风险、保护用户个人健康[1]。本项目利用 Hi3516DV300 计算机视觉与 Hi3861V100 WiFi-IoT 开发套件设计了一种利用手势进行交互的智能商品售卖机，可通过手势识别实现商品选择等功能，选择商品、支付成功后自动出货，达到了无接触交互的目的，安全卫生、交互方便。本项目同时采用了物联网技术与设计思想，实现了数据上传、数据分析、远程数据更新等功能。
