@@ -7,6 +7,7 @@
  *     |_____/|_|  |_/_/    \_\_|  \_\ |_|        \/   |______|_| \_|_____/ \____/|_|  \_\
  *
  * Copyright (c) 2022 Sidi Liang.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at

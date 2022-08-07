@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2022 HiSilicon (Shanghai) Technologies CO., LIMITED.
+ * Copyright (c) 2022 Sidi Liang.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -42,7 +44,7 @@ extern "C" {
 #define HEIGHT_LIMIT       32
 #define IMAGE_WIDTH        224  // The resolution of the model IMAGE sent to the classification is 224*224
 #define IMAGE_HEIGHT       224
-#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification_v2_5.wk" // darknet framework wk model
+#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification_v6.wk" // darknet framework wk model
 #define MODEL_FILE_GESTURE_SAMPLE    "/userdata/models/hand_classify/hand_gesture.wk" // darknet framework wk model
 
 static int biggestBoxIndex;

@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
+  Copyright (c) 2022 Sidi Liang
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +31,6 @@
 
 #define NUMBER_OF_SLOTS 4
 
-/* Create a bunch of objects as demonstration. */
 int print_preallocated(cJSON *root)
 {
     /* declarations */
