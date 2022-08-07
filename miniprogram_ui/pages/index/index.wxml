@@ -16,13 +16,13 @@
     </view>
     <view class="cp-item1">
       <image src="https://cdn.fgprc.org.cn/vendor/2.png" class="cp-image2"></image>
-      <text class="text1">4</text>
+      <text class="text1">3</text>
       <text class="text2">{{name3}}</text>
       <text class="text3">¥ {{price3}}</text>
     </view>
     <view class="cp-item1">
       <image src="https://cdn.fgprc.org.cn/vendor/1.png" class="cp-image2"></image>
-      <text class="text1">3</text>
+      <text class="text1">4</text>
       <text class="text2">{{name4}}</text>
       <text class="text3">¥ {{price4}}</text>
     </view>
