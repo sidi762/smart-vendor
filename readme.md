@@ -32,6 +32,7 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
   ## __目录__
 
   * [__文件组成说明__](#文件组成说明)
+  * [__安装运行__](#安装运行)
   * [__设计概述__](#设计概述)
     * [应用领域](#应用领域)
     * [主要技术特点](#主要技术特点)
@@ -49,6 +50,54 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
 * `./applications/sample/wifi-iot`：传感器、电机驱动及物联网通信模块（Hi3861V100开发板）软件代码
 * `./miniprogram_ui`：可视化界面模块（微信小程序）
 * `./dl`：静态手势识别模型文件以及部分训练相关代码
+
+## __安装运行__
+### 机器视觉手势识别模块
+#### 环境要求
+* `Hi3516DV300 Taurus AI`开发套件  
+* `OpenHarmony v3.1 小型系统 (small system)`编译环境及源码, 可参考[OpenHarmony官方文档](https://docs.openharmony.cn/pages/v3.1/zh-cn/device-dev/device-dev-guide.md/)进行配置
+
+#### 编译
+首先将`device`文件夹内所有内容合并至OpenHarmony中`device`路径下。  
+可使用华为 DevEco Device Tool IDE方式或命令行方式进行编译。以下是命令行方式编译说明。  
+
+首先进入OpenHarmony目录下：
+```bash
+cd OpenHarmony
+```
+使用hb工具进行编译：
+```bash
+hb set .
+ipcamera_hispark_taurus_linux/ipcamera_hispark_taurus
+hb build -f
+```
+编译结果位于 `./out/hispark_taurus/ipcamera_hispark_taurus/bin/smart_vendor_main`
+
+#### 烧录
+详见[OpenHarmony官方文档](https://docs.openharmony.cn/pages/v3.1/zh-cn/device-dev/device-dev-guide.md/)。
+
+#### 安装
+1. 将`dl`目录下`gesture_classification_v3.wk`模型文件拷贝至Hi3516DV300开发板中`/userdata/models/smart_vendor_ai`目录下。
+2. 将`dl`目录下`hand_detect.wk`模型文件拷贝至Hi3516DV300开发板中`/userdata/models/hand_classify/`目录下。
+3. 将编译得到的二进制文件`smart_vendor_main`拷贝至Hi3516DV300开发板中。
+
+#### 运行
+在Hi3516DV300开发板上，首先启用`hi_mipi_tx`驱动：
+```bash
+insmod /ko/hi_mipi_tx.ko
+```
+运行程序:
+```bash
+./smart_vendor_main
+```
+
+### 传感器、电机驱动及物联网通信模块
+#### 环境要求
+* `Hi3861V100 Wi-Fi IoT`开发套件
+* `OpenHarmony v3.1 轻量系统 (mini system)`编译环境及源码, 可参考[OpenHarmony官方文档](https://docs.openharmony.cn/pages/v3.1/zh-cn/device-dev/device-dev-guide.md/)进行配置
+
+___
+
 ## __设计概述__
 
 本项目为2022嵌入式芯片与系统设计竞赛参赛项目。  
