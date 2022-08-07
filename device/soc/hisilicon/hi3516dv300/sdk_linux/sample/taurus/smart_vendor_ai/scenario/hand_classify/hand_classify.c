@@ -44,7 +44,7 @@ extern "C" {
 #define HEIGHT_LIMIT       32
 #define IMAGE_WIDTH        224  // The resolution of the model IMAGE sent to the classification is 224*224
 #define IMAGE_HEIGHT       224
-#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification_v3.wk" // darknet framework wk model
+#define MODEL_FILE_GESTURE    "/userdata/models/smart_vendor_ai/gesture_classification_v6.wk" // darknet framework wk model
 #define MODEL_FILE_GESTURE_SAMPLE    "/userdata/models/hand_classify/hand_gesture.wk" // darknet framework wk model
 
 static int biggestBoxIndex;
