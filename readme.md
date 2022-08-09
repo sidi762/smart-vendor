@@ -51,6 +51,7 @@ Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.
 * `./device/soc/hisilicon/hi3516dv300/sdk_linux/sample/taurus/smart_vendor_ai`：机器视觉手势识别模块（Hi3516DV300开发板）软件代码
 * `./applications/sample/wifi-iot`：传感器、电机驱动及物联网通信模块（Hi3861V100开发板）软件代码
 * `./miniprogram_ui`：可视化界面模块（微信小程序）
+* `./management_miniprogram`：管理后台小程序  
 * `./dl`：静态手势识别模型文件以及部分训练相关代码
 
 ## __安装运行__
