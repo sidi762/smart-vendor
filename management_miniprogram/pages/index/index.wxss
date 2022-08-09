@@ -1,0 +1,43 @@
+.cps2{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cp-item1{
+  width: 50%;
+  display: flex;
+  align-items:center;
+  flex-direction: column;
+  font-size:30rpx;
+}
+.cp-image2{
+  width: 300rpx;
+  height: 280rpx;
+}
+.cp-item2 text{
+  font-size: 30rpx;
+  width: 100%;
+  text-align:center;
+  margin-left:20rpx;
+}
+.text1{
+  height: 45rpx;
+  font-weight: 600; 
+}
+.text3{
+  height: 60rpx;
+  font-weight: 900; 
+}
+.text4{
+  font-weight: 900; 
+}
+.container{
+  min-height: 100vh;
+  background-color: rgb(255, 255, 255);
+}
+
+.text2{
+  height: 40rpx;
+  font-weight: 600; 
+  color: rgb(38, 0, 255);
+}

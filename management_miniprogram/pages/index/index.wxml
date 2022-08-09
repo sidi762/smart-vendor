@@ -1,0 +1,49 @@
+<view class="container">
+<view class="cps2">
+    <view class="cp-item1">
+      <image src="https://cdn.fgprc.org.cn/vendor/4.png" class="cp-image2"></image>
+      <text class="text3">货道: 1</text>
+      <view class="text1">产品名称</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_nameEdit1"  value="{{name1}}" placeholder="{{name1}}"/>
+      <view class="text1">产品价格</view>
+      <input  class="text2"style="text-align: center;" bindconfirm="_priceEdit1" value="{{price1}}" placeholder="{{price1}}"/>
+      <view class="text1">剩余数量</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_remainingNumEdit1" value="{{remain_num1}}" placeholder="{{remain_num1}}"/>
+  
+      <text>\n</text>
+      </view>
+      <view class="cp-item1">
+      <image src="https://cdn.fgprc.org.cn/vendor/1.png" class="cp-image2"></image>
+      <text class="text3">货道: 2</text>
+      <view class="text1">产品名称</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_nameEdit2"  value="{{name2}}" placeholder="{{name2}}"/>
+      <view class="text1">产品价格</view>
+      <input  class="text2"style="text-align: center;" bindconfirm="_priceEdit2" value="{{price2}}" placeholder="{{price2}}"/>
+      <view class="text1">剩余数量</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_remainingNumEdit2" value="{{remain_num2}}" placeholder="{{remain_num2}}"/>
+      <text>\n</text>
+      </view>
+
+      <view class="cp-item1">
+      <image src="https://cdn.fgprc.org.cn/vendor/2.png" class="cp-image2"></image>
+      <text class="text3">货道: 3</text>
+      <view class="text1">产品名称</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_nameEdit3"  value="{{name3}}" placeholder="{{name3}}"/>
+      <view class="text1">产品价格</view>
+      <input  class="text2"style="text-align: center;" bindconfirm="_priceEdit3" value="{{price3}}" placeholder="{{price3}}"/>
+      <view class="text1">剩余数量</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_remainingNumEdit3" value="{{remain_num3}}" placeholder="{{remain_num3}}"/>
+      </view>
+
+      <view class="cp-item1">
+      <image src="https://cdn.fgprc.org.cn/vendor/1.png" class="cp-image2"></image>
+     <text class="text3">货道: 4</text>
+      <view class="text1">产品名称</view>
+      <input class="text2"style="text-align: center;" bindconfirm="_nameEdit4"  value="{{name4}}" placeholder="{{name4}}"/>
+      <view class="text1">产品价格</view>
+      <input  class="text2"style="text-align: center;" bindconfirm="_priceEdit4" value="{{price4}}" placeholder="{{price4}}"/>
+      <view class="text1">剩余数量</view>
+      <input class="text2"style="text-align: center; " bindconfirm="_remainingNumEdit4" value="{{remain_num4}}" placeholder="{{remain_num4}}"/>
+      </view>
+</view>
+</view>
